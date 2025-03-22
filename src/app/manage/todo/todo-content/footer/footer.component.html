@@ -2,15 +2,15 @@
 <ul class="filters">
     <li>
         <a [class.selected]="currentStatus===TodoStatusType.All" (click)="setTodoStatusType(TodoStatusType.All)"
-            href="#">All</a>
+        [routerLink]="['../All']">All</a>
     </li>
     <li>
         <a [class.selected]="currentStatus===TodoStatusType.Active" (click)="setTodoStatusType(TodoStatusType.Active)"
-            href="#/active">Active</a>
+            [routerLink]="['../active']">Active</a>
     </li>
     <li>
         <a [class.selected]="currentStatus===TodoStatusType.Completed"
-            (click)="setTodoStatusType(TodoStatusType.Completed)" href="#/completed">Completed</a>
+            (click)="setTodoStatusType(TodoStatusType.Completed)" [routerLink]="['../Completed']">Completed</a>
     </li>
 </ul>
 <button class="clear-completed" style="display: block;" (click)="clearCompleted()">Clear completed</button>

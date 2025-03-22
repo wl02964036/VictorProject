@@ -6,6 +6,8 @@ export interface Todo {
     canEdit: boolean;
     seqno: number;
     createAt: Date;
+    createBy: string;
+    groupId: string;
 }
 
 export class TodoClass implements Todo {
@@ -15,7 +17,9 @@ export class TodoClass implements Todo {
     editing: boolean;
     canEdit: boolean;
     seqno: number;
-    createAt: Date;
+    createAt!: Date;
+    createBy!: string;
+    groupId!: string;
 
     constructor(_name: string, _seqno: number, _value: boolean = false, _editing: boolean = false, _canEdit: boolean = false) {
         this.todoId = "", 
@@ -24,7 +28,6 @@ export class TodoClass implements Todo {
         this.editing = _editing;
         this.canEdit = _canEdit;
         this.seqno = _seqno;
-        this.createAt =  new Date();
     }
 
     toggle() {

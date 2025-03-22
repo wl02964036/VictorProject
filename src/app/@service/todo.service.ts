@@ -8,8 +8,8 @@ import { TodoApiService } from './todo-api.service';
 export class TodoService {
   toggleAllBtn = false;
   currentStatus = TodoStatusType.All;
-
   dataList: Todo[] = [];
+  groupId = '';
   
   // getter
   get currentTodoList(): Todo[] {
@@ -42,7 +42,7 @@ export class TodoService {
   }
 
   getData() {
-    this.todoApiService.getTodoList().subscribe(data => {
+    this.todoApiService.getTodoList(this.groupId).subscribe(data => {
       this.dataList = data;
       this.dataList.forEach(item => {
         item.canEdit = true;
@@ -53,7 +53,8 @@ export class TodoService {
 
   add(inputValue: string) {
     const seqno = new Date().getTime();
-    const todo = new TodoClass(inputValue, seqno);
+    const todo: Todo = new TodoClass(inputValue, seqno);
+    todo.groupId = this.groupId;
     this.dataList.push(todo);
     this.todoApiService.addTodo(todo).subscribe(data => {
       if (data.status === "success") {
@@ -92,12 +93,11 @@ export class TodoService {
     this.dataList.forEach(item => {
       item.value = this.toggleAllBtn;
     });
-    this.updateAllStatusApi(this.toggleAllBtn);
+    this.updateAllStatusApi(this.toggleAllBtn, this.groupId);
   }
 
   clearCompleted() {
-    const completedList: string[] = this.todoCompleted.map(item => item.todoId);
-    this.deleteCompletedApi(completedList);
+    this.deleteCompletedApi(this.groupId);
     this.dataList = this.todoActive;
   }
 
@@ -128,8 +128,8 @@ export class TodoService {
     });
   }
 
-  updateAllStatusApi(status: boolean) {
-    this.todoApiService.updateAllTodoStatus(status).subscribe(data => {
+  updateAllStatusApi(status: boolean, groupId: string) {
+    this.todoApiService.updateAllTodoStatus(status, groupId).subscribe(data => {
       if (data.status !== "success") {
         alert(data.message);
       }
@@ -144,8 +144,8 @@ export class TodoService {
     });
   }
 
-  deleteCompletedApi(items: string[]) {
-    this.todoApiService.deleteCompletedTodo(items).subscribe(data => {
+  deleteCompletedApi(groupId: string) {
+    this.todoApiService.deleteCompletedTodo(groupId).subscribe(data => {
       if (data.status !== "success") {
         alert(data.message);
       }

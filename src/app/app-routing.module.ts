@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './manage/home/home.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import { LoginComponent } from './login/login.component';
-import { ManageComponent } from './manage/manage.component';
-import { TodoComponent } from './manage/todo/todo.component';
 
 // 指定路徑匹配Component
 const routes: Routes = [

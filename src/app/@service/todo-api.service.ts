@@ -12,8 +12,8 @@ export class TodoApiService {
   constructor(private http: HttpClient) { }
 
   // 取所有資料
-  getTodoList() {
-    return this.http.get<Todo[]>(this.url);
+  getTodoList(groupId: string) {
+    return this.http.get<Todo[]>(`${this.url}/${groupId}`);
   }
 
   // 新增一筆資料
@@ -27,8 +27,8 @@ export class TodoApiService {
   }
 
   // 全部狀態統一
-  updateAllTodoStatus(status: boolean) {
-    return this.http.put<TodoResponse>(`${this.url}/all/status`, status);
+  updateAllTodoStatus(status: boolean, groupId: string) {
+    return this.http.put<TodoResponse>(`${this.url}/${groupId}/status`, status);
   }
 
   // 刪除一筆資料
@@ -37,9 +37,7 @@ export class TodoApiService {
   }
 
   // 刪除已完成的資料
-  deleteCompletedTodo(items: string[]) {
-    return this.http.delete<TodoResponse>(`${this.url}/clear_completed`, {
-      body: items  // 在 options 內加 body
-    });
+  deleteCompletedTodo(groupId: string) {
+    return this.http.delete<TodoResponse>(`${this.url}/${groupId}/clear_completed`);
   }
 }

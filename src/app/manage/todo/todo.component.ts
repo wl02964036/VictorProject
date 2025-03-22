@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./todo.component.scss']
 })
 export class TodoComponent {
-  title = 'OneTodo';
-  placeholder = 'What needs to be done????';
 
   constructor() { }
 
