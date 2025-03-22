@@ -1,0 +1,21 @@
+<div class="modal fade" id="todoInfoModal" tabindex="-1" aria-labelledby="todoInfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="todoInfoModalLabel">代辦事項明細</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="todo">
+          <div>id: {{todo.todoId}}</div>
+          <div>事情: {{todo.name}}</div>
+          <div>完成: {{todo.value?'是':'否'}}</div>
+          <div>建立日期: {{todo.createAt | date:'yyyy-MM-dd HHLmm:ss'}}</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">關閉</button>
+      </div>
+    </div>
+  </div>
+</div>
