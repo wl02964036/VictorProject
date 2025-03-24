@@ -38,7 +38,6 @@ export class TodoService {
   }
 
   constructor(private todoApiService: TodoApiService) {
-    this.getData();
   }
 
   getData() {
@@ -47,8 +46,12 @@ export class TodoService {
       this.dataList.forEach(item => {
         item.canEdit = true;
       });
-      this.checkToggleAllBtn();
+      this.ready();
     });
+  }
+
+  ready() {
+    this.checkToggleAllBtn();
   }
 
   add(inputValue: string) {
