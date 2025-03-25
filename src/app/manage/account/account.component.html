@@ -1,0 +1,56 @@
+<form [formGroup]="roleForm" (ngSubmit)="onSubmit()" novalidate>
+    <h1 class="h3 mb-2 text-gray-800">修改角色</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">角色修改</h6>
+            <div class="btn-group" role="group" aria-label="功能選單">
+                <button type="submit" class="btn btn-warning">儲存</button>
+                <button type="button" class="btn btn-info" (click)="onReset()">重填</button>
+                <button type="button" class="btn btn-primary" (click)="onBack()">回上頁</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group required">
+                <label for="code">代碼</label>
+                <input id="code" type="text" class="form-control" formControlName="code" readonly>
+                <small class="form-text text-muted">代碼需為英文，不可重複</small>
+            </div>
+
+            <div class="form-group required">
+                <label for="title">名稱</label>
+                <input id="title" type="text" class="form-control" formControlName="title">
+                <div *ngIf="roleForm.get('title')?.invalid && roleForm.get('title')?.touched"
+                    class="invalid-feedback d-block">
+                    名稱為必填且最多 256 字
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">描述</label>
+                <textarea id="description" rows="3" class="form-control" formControlName="description"></textarea>
+                <div *ngIf="roleForm.get('description')?.invalid && roleForm.get('description')?.touched"
+                    class="invalid-feedback d-block">
+                    最多 512 字
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>允許機關管理者設定</label>
+                <div class="custom-control custom-radio">
+                    <input id="assignable1" type="radio" class="custom-control-input" [value]="true"
+                        formControlName="assignable">
+                    <label class="custom-control-label" for="assignable1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="assignable2" type="radio" class="custom-control-input" [value]="false"
+                        formControlName="assignable">
+                    <label class="custom-control-label" for="assignable2">否</label>
+                </div>
+                <div *ngIf="roleForm.get('assignable')?.invalid && roleForm.get('assignable')?.touched"
+                    class="invalid-feedback d-block">
+                    請選擇一個選項
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
