@@ -40,17 +40,10 @@ export class TodoService {
   constructor(private todoApiService: TodoApiService) {
   }
 
-  getData() {
-    this.todoApiService.getTodoList(this.groupId).subscribe(data => {
-      this.dataList = data;
-      this.dataList.forEach(item => {
-        item.canEdit = true;
-      });
-      this.ready();
-    });
-  }
-
   ready() {
+    this.dataList.forEach(item => {
+      item.canEdit = true;
+    });
     this.checkToggleAllBtn();
   }
 

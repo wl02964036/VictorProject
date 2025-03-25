@@ -23,7 +23,6 @@ export class InterceptorService implements HttpInterceptor {
     return next.handle(req).pipe(
       map(event => {
         if (event instanceof HttpResponse) {
-          console.log(event.body.status);
           switch (event.body.status) {
             case 'success': {
               event = this.success(event);
