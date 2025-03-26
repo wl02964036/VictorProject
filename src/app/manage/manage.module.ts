@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MenuComponent } from '../shared/menu/menu.component';
-import { Header2Component } from '../shared/header2/header2.component';
 import { ManageRoutingModule } from './manage-routing.module';
-import { HomeComponent } from './home/home.component';
 import { ManageComponent } from './manage.component';
 import { FormsModule } from '@angular/forms';
+import { SideBarMenuComponent } from '../@shared/sidebar-menu/sidebar-menu.component';
+import { TopBarComponent } from '../@shared/top-bar/top-bar.component';
+import { IndexComponent } from './index/index.component';
 
 
 @NgModule({
   declarations: [
-    MenuComponent,
-    Header2Component,
-    HomeComponent,
+    SideBarMenuComponent,
+    TopBarComponent,
+    IndexComponent,
     ManageComponent,
   ],
   imports: [

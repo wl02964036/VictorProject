@@ -1,4 +1,4 @@
-<div class="mzone">
+<!-- <div class="mzone">
     <div class="titleZone">
         TODO系統
     </div>
@@ -7,4 +7,60 @@
     <button class="btn btn-success text-white mm" type="submit" (click)="login()">
         登入
     </button>
+</div> -->
+
+<div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image" style="min-height: 420px;"></div>
+                        <div class="col-lg-5">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-primary mb-4">
+                                        {{ loggedOut ? '您已經登出' : errorMessage ? errorMessage : '歡迎回來' }}
+                                    </h1>
+                                </div>
+                                <form id="loginForm" #loginForm="ngForm" class="user" (ngSubmit)="onSubmit(loginForm)">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-user" name="username"
+                                            [(ngModel)]="loginValue.username" placeholder="請輸入帳號" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-user" name="password"
+                                            [(ngModel)]="loginValue.password" placeholder="請輸入密碼" required autocomplete="off">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-user" name="captcha"
+                                            [(ngModel)]="loginValue.captcha" placeholder="請輸入下方驗證碼" required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">登入</button>
+
+                                    <div id="captchaImage" class="form-group mt-3">
+                                        <img id="captchaImg" [src]="'/angular/captchaImage'" width="96" height="43" alt="圖形驗證碼">
+                                    </div>
+
+                                    <div id="captchaAudio" class="form-group" *ngIf="isIE">
+                                        <button type="button" class="btn btn-secondary"
+                                            (click)="playCaptchaAudio()">播放</button>
+                                    </div>
+                                    <div id="captchaAudio" class="form-group" *ngIf="!isIE">
+                                        <audio controls [src]="'/angular/captchaAudio'" type="audio/wav"></audio>
+                                    </div>
+
+                                    <button class="btn btn-info mb-3" type="button"
+                                        (click)="reloadCaptcha()">重新產生驗證碼</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

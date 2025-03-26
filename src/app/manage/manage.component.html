@@ -1,14 +1,52 @@
-<div id="main-wrapper"
-     data-layout="vertical"
-     data-navbarbg="skin5"
-     data-sidebartype="full"
-     data-sidebar-position="absolute"
-     data-header-position="absolute"
-     data-boxed-layout="full">
-     <app-header2></app-header2>
-    <app-menu></app-menu>
-    <div class="page-wrapper">
-        <!--監聽url，匹配app-routing.module.ts裡面Routes陣列對應的Component-->
-        <router-outlet></router-outlet>
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" [routerLink]="['/manage/index']">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fab fa-buysellads"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Angular</div>
+        </a>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <app-side-bar-menu></app-side-bar-menu>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Topbar -->
+            <app-top-bar></app-top-bar>
+            <!-- 頁面主要內容 -->
+            <div class="container-fluid">
+                <!--監聽url，匹配app-routing.module.ts裡面Routes陣列對應的Component-->
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Victor Project 2025</span>
+                </div>
+            </div>
+        </footer>
     </div>
 </div>
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="javascript:void(0)" (click)="pageTop()">
+    <i class="fas fa-angle-up"></i>
+</a>

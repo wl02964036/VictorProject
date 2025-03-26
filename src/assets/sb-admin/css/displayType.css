@@ -1,0 +1,25 @@
+body div span.tcpass {
+    width: 88px;
+    padding: 3px 8px;
+    border-radius: 50px;
+    display: inline-block;
+    color: #FFF;
+    font-size: 85%;
+    margin-right: 5px;
+    text-align: center;
+    border: 2px solid #2c7c87;
+    background-color: #2c7c87;
+}
+
+body div span.fun {
+    width: 88px;
+    padding: 3px 8px;
+    border-radius: 50px;
+    display: inline-block;
+    color: #FFF;
+    font-size: 85%;
+    margin-right: 5px;
+    text-align: center;
+    border: 2px solid #ea5514;
+    background-color: #ea5514;
+}

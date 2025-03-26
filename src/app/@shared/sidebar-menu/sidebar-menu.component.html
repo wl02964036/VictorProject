@@ -1,0 +1,31 @@
+<li *ngFor="let item of sidebarMenus; let last = last" class="nav-item">
+
+  <!-- 如果是 dropdown menu（子選單） -->
+  <ng-container *ngIf="item.path === '#'">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" [attr.data-target]="'#menu-' + item.uuid"
+      [attr.aria-controls]="'menu-' + item.uuid" aria-expanded="false">
+      <i class="fas fa-fw fa-folder"></i>
+      <span>{{ item.title }}</span>
+    </a>
+    <div [id]="'menu-' + item.uuid" class="collapse" [attr.aria-labelledby]="'heading-' + item.uuid"
+      data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <h6 class="collapse-header">{{ item.title }}:</h6>
+        <a *ngFor="let c of item.children" class="collapse-item text-wrap" [routerLink]="c.path" [title]="c.title">
+          {{ c.title }}
+        </a>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- 如果是單一選單項目 -->
+  <ng-container *ngIf="item.path !== '#'">
+    <a class="nav-link" [routerLink]="item.path" [title]="item.title">
+      <i class="fas fa-fw fa-list-alt"></i>
+      <span>{{ item.title }}</span>
+    </a>
+  </ng-container>
+
+  <!-- 插入分隔線（不是最後一個） -->
+  <hr *ngIf="!last" class="sidebar-divider my-0" />
+</li>
