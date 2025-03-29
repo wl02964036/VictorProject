@@ -1,0 +1,57 @@
+<h1 class="h3 mb-2 text-gray-800">人員組織</h1>
+<div class="mb-4"></div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>人員組織</span>
+            <div class="form-inline mt-3" style="flex-direction: row-reverse;">
+                <button id="excel" class="excel btn btn-primary ml-2 mb-2 mr-2" type="submit"
+                    (click)="exportExcel()">匯出xls報表</button>
+            </div>
+        </h6>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-auto">
+                <h6 class="mb-2 title text-info">人員組織樹</h6>
+                <div id="organizationTree"></div>
+            </div>
+            <div id="contentFrame" class="col">
+                <ng-container [ngSwitch]="currentComponent">
+                    <app-organization-edit-unit *ngSwitchCase="'editUnit'"
+                        [nodeId]="selectedNodeId" 
+                        [(message)]="message"
+                        (switchComponent)="onSwitchComponent($event.newComponent, $event.newNodeId)" 
+                        (refreshTree)="onRefreshTree($event.targetNodeId)">
+                    </app-organization-edit-unit>
+                    <app-organization-new-unit *ngSwitchCase="'newUnit'" 
+                        [nodeId]="selectedNodeId"
+                        [(message)]="message"
+                        (switchComponent)="onSwitchComponent($event.newComponent, $event.newNodeId)" 
+                        (refreshTree)="onRefreshTree($event.targetNodeId)">
+                    </app-organization-new-unit>
+                    <app-organization-edit-user *ngSwitchCase="'editUser'" 
+                        [nodeId]="selectedNodeId"
+                        [(message)]="message"
+                        (switchComponent)="onSwitchComponent($event.newComponent, $event.newNodeId)" 
+                        (refreshTree)="onRefreshTree($event.targetNodeId)">
+                    </app-organization-edit-user>
+                    <app-organization-new-user *ngSwitchCase="'newUser'" 
+                        [nodeId]="selectedNodeId"
+                        [(message)]="message"
+                        (switchComponent)="onSwitchComponent($event.newComponent, $event.newNodeId)" 
+                        (refreshTree)="onRefreshTree($event.targetNodeId)">
+                    </app-organization-new-user>
+                    <app-organization-edit-password *ngSwitchCase="'editPassword'" 
+                        [nodeId]="selectedNodeId"
+                        [(message)]="message"
+                        (switchComponent)="onSwitchComponent($event.newComponent, $event.newNodeId)">
+                    </app-organization-edit-password>
+                    <div *ngSwitchDefault></div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

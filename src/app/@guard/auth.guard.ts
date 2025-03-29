@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+  errorMessage: string | null = null;
+
+  constructor(private router: Router) {}
+  
   // 只針對父親的路由守衛
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -13,18 +17,32 @@ export class AuthGuard implements CanActivate {
 
     const token = localStorage.getItem('token');
     if (token) {
-      const payload = JSON.parse(window.atob(token.split('.')[1]));
-      const exp = new Date(Number(payload.exp) * 1000);
-      if (new Date() > exp) {
-        alert('JWT已過期，請重新登入');
-        return false;
+      try {
+        const payload = JSON.parse(window.atob(token.split('.')[1]));
+        const exp = new Date(Number(payload.exp) * 1000);
+        if (new Date() < exp) {
+          return true;
+        }else {
+          this.errorMessage = 'JWT已過期，請重新登入';
+          alert(this.errorMessage);
+        }
+      } catch (err) {
+        this.errorMessage = 'JWT 解析錯誤';
+        console.error(this.errorMessage, err);
+        alert(this.errorMessage);
       }
     } else {
-      alert('尚未登入');
-      return false;
+      this.errorMessage = 'JWT失效，請重新登入';
+      alert(this.errorMessage);
     }
 
-    return true;
+
+    // 清掉 token 並導向登入頁
+    localStorage.removeItem('token');
+    localStorage.removeItem("systemUser");
+    localStorage.removeItem("sidebarMenus");
+    this.router.navigate(['/login'], { queryParams: { error: this.errorMessage } });
+    return false;
   }
 
   // 針對兒子的路由守衛

@@ -23,7 +23,10 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, 
     private loginApiService: LoginApiService, 
     private captchaApiService: CaptchaApiService, 
-    private renderer: Renderer2) { }
+    private renderer: Renderer2) { 
+      // 載入驗證碼
+      this.reloadCaptcha();
+    }
 
   // 初始化時要做什麼
   ngOnInit() {
@@ -42,9 +45,6 @@ export class LoginComponent implements OnInit {
     if (window.top !== window.self) {
       window.top!.location.href = window.location.href;
     }
-
-    // 載入驗證碼
-    this.reloadCaptcha();
 
     // from表單驗證
     $("#loginForm").parsley({
@@ -72,6 +72,9 @@ export class LoginComponent implements OnInit {
     this.captchaApiService.reloadCaptcha().subscribe(() => {
       const img = document.getElementById('captchaImg') as HTMLImageElement;
       img.src = `/angular/captchaImage?t=${Date.now()}`;
+
+      const audio = document.getElementById('captchaAudioWav') as HTMLAudioElement;
+      audio.src = `/angular/captchaAudio`;
     });
   }
 

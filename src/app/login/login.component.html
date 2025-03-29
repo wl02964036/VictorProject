@@ -1,14 +1,3 @@
-<!-- <div class="mzone">
-    <div class="titleZone">
-        TODO系統
-    </div>
-    <div>帳號：<input type="text" class="form-control" [(ngModel)]="loginValue.username" placeholder="帳號"></div>
-    <div>密碼：<input type="password" class="form-control" [(ngModel)]="loginValue.pwd" placeholder="密碼"></div>
-    <button class="btn btn-success text-white mm" type="submit" (click)="login()">
-        登入
-    </button>
-</div> -->
-
 <div class="container">
     <!-- Outer Row -->
     <div class="row justify-content-center">
@@ -42,7 +31,7 @@
                                     <button type="submit" class="btn btn-primary btn-user btn-block">登入</button>
 
                                     <div id="captchaImage" class="form-group mt-3">
-                                        <img id="captchaImg" [src]="'/angular/captchaImage'" width="96" height="43" alt="圖形驗證碼">
+                                        <img id="captchaImg" width="96" height="43" alt="圖形驗證碼">
                                     </div>
 
                                     <div id="captchaAudio" class="form-group" *ngIf="isIE">
@@ -50,7 +39,7 @@
                                             (click)="playCaptchaAudio()">播放</button>
                                     </div>
                                     <div id="captchaAudio" class="form-group" *ngIf="!isIE">
-                                        <audio controls [src]="'/angular/captchaAudio'" type="audio/wav"></audio>
+                                        <audio id="captchaAudioWav" controls type="audio/wav"></audio>
                                     </div>
 
                                     <button class="btn btn-info mb-3" type="button"

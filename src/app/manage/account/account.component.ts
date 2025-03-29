@@ -1,5 +1,5 @@
 import { RoleApiService } from './../../@service/role-api.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Role } from 'src/app/@models/role.model';
@@ -9,7 +9,7 @@ import { Role } from 'src/app/@models/role.model';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit {
   roleForm!: FormGroup;
   roleData!: Role;
 
@@ -31,6 +31,10 @@ export class AccountComponent {
       description: [this.roleData.description, [Validators.maxLength(512)]],
       assignable: [this.roleData.assignable, Validators.required]
     });
+  }
+  
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
   }
 
   onSubmit(): void {
