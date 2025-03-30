@@ -6,8 +6,16 @@ export interface Role {
     items: string[];
 }
 
+export interface RoleQuery {
+    code: string;
+    title: string;
+    updatedBy: string;
+    updateUnit: string;
+    updatedAt: Date;
+}
+
 export interface RoleResponse {
     status: string;
     message?: string;
-    roleBind: Role;
+    role: Role;
 }

@@ -11,7 +11,7 @@ import { RoleApiService } from '../@service/role-api.service';
 @Injectable({
     providedIn: 'root'
 })
-export class RoleResolver implements Resolve<Role> {
+export class RoleEditResolver implements Resolve<Role> {
 
     constructor(private roleApiService: RoleApiService) { }
 
@@ -20,7 +20,7 @@ export class RoleResolver implements Resolve<Role> {
         return this.roleApiService.getRoleByCode(code).pipe(
             map(response => {
                 if (response.status === 'success') {
-                    return response.roleBind;
+                    return response.role;
                 } else {
                     throw new Error(response.message || '讀取角色資料失敗');
                 }

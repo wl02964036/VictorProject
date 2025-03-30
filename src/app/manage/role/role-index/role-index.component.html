@@ -1,0 +1,54 @@
+<h1 class="h3 mb-2 text-gray-800">角色管理</h1>
+<div class="mb-4"></div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <form id="filterForm" method="post">
+        	<h6 class="m-0 font-weight-bold text-primary">
+	            <div class="row">
+	                 <div class="col-sm-5">
+	                    <div class="form-group">
+	                        <label class="control-label" for="qryEmail">名稱</label>
+	                        <input type="text" name="queryTitle" id="queryTitle" class="form-control" [(ngModel)]="queryTitle" />
+	                    </div>
+	                </div>
+	            </div>
+		        <div class="row">
+		            <div class="col-sm-12">
+			            <button class="btn btn-success mb-2" (click)="onQuery()">查詢</button>
+			            <button class="btn btn-info ml-2 mb-2" (click)="onReset()">清除</button>
+	                </div>
+	            </div>
+        	</h6>
+        </form>
+        <h6 class="m-0 font-weight-bold text-primary">
+            <button class="btn btn-danger btn-icon-split float-right" (click)="onDestroy()">
+                <span class="icon text-white-50"><i class="fas fa-minus"></i></span>
+                <span class="text">刪除</span>
+            </button>
+            <button class="btn btn-info btn-icon-split float-right mr-2" (click)="onNewRole()">
+                <span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+                <span class="text">新增</span>
+            </button>
+        </h6>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-bordered table-striped" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="10%">序號</th>
+                        <th>&nbsp;</th>
+                        <th>代號</th>
+                        <th>名稱</th>
+                        <th>異動者</th>
+                        <th>異動單位</th>
+                        <th>異動時間</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>

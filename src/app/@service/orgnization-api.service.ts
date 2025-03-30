@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GetPasswordResponse, GetUnitResponse, GetUserResponse, PasswordModel, SavePasswordResponse, SaveUnitResponse, SaveUserResponse, Unit, User } from '../@models/organization.model';
 import { Observable } from 'rxjs';
+import { TreeNodeModel } from '../@models/base.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class OrganizationApiService {
 
   // 取得Menu Tree
   getMenuTree(node: string) {
-    return this.http.get<GetUnitResponse>(`/angular/tree/organization`, { params: { node } });
+    return this.http.get<TreeNodeModel>(`/angular/tree/organization`, { params: { node } });
   }
 
   // 取得一筆資料

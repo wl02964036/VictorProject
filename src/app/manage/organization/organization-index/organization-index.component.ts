@@ -8,7 +8,7 @@ import { AssetLoaderService } from 'src/app/@service/asset-loader.service';
   styleUrls: ['./organization-index.component.scss']
 })
 export class OrganizationIndexComponent implements OnInit {
-  message?: string | null = '';
+  message?: string | null = null;
   targetId: string | null = null;
   currentComponent: string | null = null;
   selectedNodeId: string = '';
