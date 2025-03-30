@@ -7,8 +7,9 @@ const routes: Routes = [
     path: "", component: ManageComponent, // 父層 -> Menu tree & header外框
     children: [
       { path: 'index', loadChildren: () => import('./index/index.module').then(m => m.IndexModule) }, // 子層 -> 首頁
-      { path: 'organization', loadChildren: () => import('./organization/organization.module').then(m => m.OrganizationModule) }, // 子層 -> 人員組織,
-      { path: 'role', loadChildren: () => import('./role/role.module').then(m => m.RoleModule) }, // 子層 -> 角色管理,
+      { path: 'organization', loadChildren: () => import('./organization/organization.module').then(m => m.OrganizationModule) }, // 子層 -> 人員組織
+      { path: 'role', loadChildren: () => import('./role/role.module').then(m => m.RoleModule) }, // 子層 -> 角色管理
+      { path: 'permission', loadChildren: () => import('./permission/permission.module').then(m => m.PermissionModule) },
       { path: "", redirectTo: "index", pathMatch: "full" }, // 根路徑跳到index
     ]
   }

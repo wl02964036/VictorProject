@@ -162,10 +162,9 @@ export class RoleEditComponent implements OnInit {
     if (this.formInstance.validate()) {
       // 驗證通過，執行提交邏輯
       this.roleApiService.updateRole(this.role).subscribe(data => {
+        this.message = data.message;
         if (data.status === "success") {
-          this.router.navigate(['../index'], { relativeTo: this.route });
-        } else {
-          this.message = data.message;
+          this.router.navigate(['../index'], { relativeTo: this.route, state: { message: this.message } });
         }
       });
     }

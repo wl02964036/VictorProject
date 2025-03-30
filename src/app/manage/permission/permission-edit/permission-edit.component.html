@@ -1,0 +1,62 @@
+<h1 class="h3 mb-2 text-gray-800">修改權限</h1>
+<div class="mb-4">
+    <div *ngIf="message" class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" (click)="message = null" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>權限修改</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="submit" class="btn btn-warning" (click)="onSubmit()">儲存</button>
+                <button type="button" class="btn btn-info" (click)="onReset(userForm)">重填</button>
+                <button type="button" class="btn btn-primary" (click)="goBack()">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="userForm" #userForm="ngForm" novalidate>
+            <div class="form-group required">
+                <label for="unitName">所屬單位</label>
+                <input id="unitName" name="unitName" type="text" class="form-control"
+                       readonly="readonly"
+                       [(ngModel)]="unitName">
+            </div>
+            <div class="form-group required">
+                <label for="username">帳號</label>
+                <input id="username" name="username" type="text" class="form-control"
+                       readonly="readonly"
+                       [(ngModel)]="user.username">
+                <small id="usernameHelp" class="form-text text-muted">代碼需為英文和數字，不可重複</small>
+            </div>
+            <div class="form-group required">
+                <label for="displayName">姓名</label>
+                <input id="displayName" name="displayName" type="text" class="form-control"
+                       readonly="readonly"
+                       [(ngModel)]="user.displayName">
+            </div>
+
+            <!-- 隸屬角色 -->
+            <div class="form-group required">
+                <label>所屬角色</label>
+                <div *ngFor="let role of roleTuples; let i = index" class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" [id]="'roles' + i" [value]="role.v1"
+                        name="roles" [checked]="user.roles.includes(role.v1)"
+                        (change)="onRoleChange($event, role.v1)"
+                        [attr.data-parsley-required]="i === 0 ? 'true' : null"
+                        [attr.data-parsley-mincheck]="i === 0 ? '1' : null"
+                        [attr.data-parsley-class-handler]="classHandler"
+                        data-parsley-errors-container="#rolesError"/>
+                    <label class="custom-control-label" [for]="'roles' + i">{{ role.v2 }}</label>
+                </div>
+                <div id="rolesError" class="controlError"></div>
+            </div>
+            <input type="hidden" id="unitCode" name="unitCode" [(ngModel)]="user.unitCode">
+        </form>
+    </div>
+</div>

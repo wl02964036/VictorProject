@@ -1,18 +1,16 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AssetLoaderService } from 'src/app/@service/asset-loader.service';
-import { RoleApiService } from 'src/app/@service/role-api.service';
 
 @Component({
-  selector: 'app-role-index',
-  templateUrl: './role-index.component.html',
-  styleUrls: ['./role-index.component.scss']
+  selector: 'app-permission-index',
+  templateUrl: './permission-index.component.html',
+  styleUrls: ['./permission-index.component.scss']
 })
-export class RoleIndexComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PermissionIndexComponent implements OnInit {
   message?: string | null = null;
-  queryTitle: string = '';
+  queryUsername: string = '';
 
-  constructor(private assetLoader: AssetLoaderService, private roleApiService: RoleApiService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private assetLoader: AssetLoaderService) { }
 
   ngOnInit(): void {
     this.message = history.state.message || null;
@@ -48,7 +46,7 @@ export class RoleIndexComponent implements OnInit, AfterViewInit, OnDestroy {
       serverSide: true,
       searching: false,
       ajax: {
-        url: "/angular/role/query",
+        url: "/angular/permission/query",
         type: "POST",
         headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') || '' },
         data: this.springify,
@@ -69,49 +67,33 @@ export class RoleIndexComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         },
         {
-          name: "checkbox",
-          data: null,
+          name: 'unitName',
+          data: 'unitName',
           orderable: false,
-          searchable: false,
-          render: function (data: any, type: any, row: any, meta: any) {
-            return '<div class="form-check">' +
-              '<input type="checkbox" name="selectedItem" class="form-check-input" data-code="' + row.code + '">' +
-              '</div>';
-          },
+          searchable: false
         },
         {
-          name: "code",
-          data: "code",
+          name: 'displayName',
+          data: 'displayName',
+          orderable: false,
+          searchable: false
+        },
+        {
+          name: 'username',
+          data: 'username',
+          width: '20%',
           orderable: true,
-          searchable: false,
-          render: function (data: any, type: any, row: any, meta: any) {
-            return `<a href="/manage/role/edit?code=${row.code}" title="修改權限">${data}</a>`;
+          searchable: true,
+          render: (data: string, type: any, row: any, meta: any) => {
+            return `<a href="/manage/permission/edit?username=${data}" title="修改權限">${data}</a>`;
           }
         },
         {
-          name: "title",
-          data: "title",
+          name: "roles",
+          data: "roles",
           orderable: false,
           searchable: true,
-        },
-        {
-          name: "updatedBy",
-          data: "updatedBy",
-          orderable: false,
-          searchable: false,
-        },
-        {
-          name: "updateUnit",
-          data: "updateUnit",
-          orderable: false,
-          searchable: false,
-        },
-        {
-          name: "updatedAt",
-          data: "updatedAt",
-          orderable: false,
-          searchable: false,
-        },
+        }
       ]
     });
   }
@@ -151,9 +133,9 @@ export class RoleIndexComponent implements OnInit, AfterViewInit, OnDestroy {
     var filterForm = $("#filterForm");
     // 取得搜尋的參數
 
-    var queryTitle = $("#queryTitle").val();
-    if (queryTitle && queryTitle !== "") {
-      params['queryTitle'] = queryTitle;
+    var queryUsername = $("#queryUsername").val();
+    if (queryUsername && queryUsername !== "") {
+      params['queryUsername'] = queryUsername;
     }
 
     return params;
@@ -170,32 +152,7 @@ export class RoleIndexComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onReset() {
-    this.queryTitle = '';
-  }
-
-  onDestroy() {
-    const selected = $("input[name='selectedItem']:checked");
-    var size = selected.length;
-    if (size < 1) {
-      alert("請至少勾選一項要刪除的項目");
-    } else {
-      const items: string[] = [];
-      selected.each((_: any, element: any) => {
-        items.push($(element).data("code"));
-      });
-      if (confirm("確定要刪除這些項目？")) {
-        var roles: string = '';
-        roles = items.join(",");
-        this.roleApiService.deleteRoles(roles).subscribe(data => {
-          this.message = data.message;
-          this.onQuery();
-        });
-      }
-    }
-  }
-
-  onNewRole() {
-    this.router.navigate(['../new'], { relativeTo: this.route });
+    this.queryUsername = '';
   }
 
 }
