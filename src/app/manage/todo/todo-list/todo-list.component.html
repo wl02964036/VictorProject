@@ -1,9 +1,0 @@
-<div class="cen">代辦事項列表</div>
-<div class="mar5" *ngFor="let item of dataList">
-  <a [routerLink]="['/manage/todo',item.groupId]" type="button" class="btn btn-outline-primary">
-    {{item.name}}
-  </a>
-</div>
-<div class="col-md-12 text-center" *ngIf="dataList.length === 0">
-  <button class="btn btn-primary" (click)="add()">產列表資料</button>
-</div>
