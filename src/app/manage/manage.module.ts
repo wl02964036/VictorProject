@@ -14,7 +14,7 @@ import { IndexComponent } from './index/index.component';
     SideBarMenuComponent,
     TopBarComponent,
     IndexComponent,
-    ManageComponent,
+    ManageComponent
   ],
   imports: [
     CommonModule,

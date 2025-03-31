@@ -1,4 +1,4 @@
-<h1 class="h3 mb-2 text-gray-800">角色管理</h1>
+<h1 class="h3 mb-2 text-gray-800">操作記錄</h1>
 <div class="mb-4 mr-4">
     <div *ngIf="message" class="alert alert-primary alert-dismissible fade show" role="alert">
         <strong>{{ message }}</strong>
@@ -15,10 +15,20 @@
 	            <div class="row">
 	                 <div class="col-sm-5">
 	                    <div class="form-group">
-	                        <label class="control-label" for="queryTitle">名稱</label>
-	                        <input type="text" name="queryTitle" id="queryTitle" class="form-control" [(ngModel)]="queryTitle" />
+	                        <label class="control-label" for="queryUsername">登入帳號</label>
+	                        <input type="text" name="queryUsername" id="queryUsername" class="form-control" [(ngModel)]="queryUsername" />
 	                    </div>
 	                </div>
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-5">
+                       <div class="form-group">
+                           <label class="control-label" for="queryActionedAt">登入時間</label>
+                           <input type="text" name="queryActionedAt" id="queryActionedAt"
+                                class="form-control datepicker mb-2 mr-sm-2" 
+                                placeholder="YYYY-MM-DD" 
+                                [(ngModel)]="queryActionedAt" />
+                       </div>
+                   </div>
 	            </div>
 		        <div class="row">
 		            <div class="col-sm-12">
@@ -28,33 +38,22 @@
 	            </div>
         	</h6>
         </form>
-        <h6 class="m-0 font-weight-bold text-primary">
-            <button class="btn btn-danger btn-icon-split float-right" (click)="onDestroy()">
-                <span class="icon text-white-50"><i class="fas fa-minus"></i></span>
-                <span class="text">刪除</span>
-            </button>
-            <button class="btn btn-info btn-icon-split float-right mr-2" (click)="onNewRole()">
-                <span class="icon text-white-50"><i class="fas fa-plus"></i></span>
-                <span class="text">新增</span>
-            </button>
-        </h6>
     </div>
-
     <div class="card-body">
         <div class="table-responsive">
-            <table id="dataTable" class="table table-bordered table-striped" width="100%" cellspacing="0">
+            <table id="dataTable"  class="table table-bordered table-striped" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th width="10%">序號</th>
-                        <th>&nbsp;</th>
-                        <th>代號</th>
-                        <th>名稱</th>
-                        <th>異動者</th>
-                        <th>異動單位</th>
-                        <th>異動時間</th>
+                        <th>登入帳號</th>
+                        <th width="20%">登入時間</th>
+                        <th>登入IP</th>
+                        <th>登入狀態</th>
+                        <th>失敗原因</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                </tbody>
             </table>
         </div>
     </div>
