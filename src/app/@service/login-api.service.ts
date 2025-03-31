@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginPost, LoginResponse } from '../@models/login.module';
 import { catchError, of } from 'rxjs';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginApiService {
-  private url = '/angular/login';
+  private url = `/angular/login`;
 
   constructor(private http: HttpClient) { }
 

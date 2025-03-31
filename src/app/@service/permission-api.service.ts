@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { BaseResponse } from '../@models/base.model';
 import { GetPermissionResponse } from '../@models/permission.model';
 import { User } from '../@models/organization.model';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermissionApiService {
 
-  private url: string = "/angular/permission";
+  private url: string = `/angular/permission`;
 
   constructor(private http: HttpClient) { }
   

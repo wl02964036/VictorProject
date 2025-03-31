@@ -3,18 +3,19 @@ import { Injectable } from '@angular/core';
 import { Group } from '../@models/group.model';
 import { TodoResponse } from '../@models/todo.model';
 import { catchError, of } from 'rxjs';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GroupApiService {
-  private url = '/angular/group_action';
+  private url = `/angular/group_action`;
 
   constructor(private http: HttpClient) { }
 
   // 取所有資料
   getGroupList() {
-    return this.http.get<Group[]>(this.url).pipe(
+    return this.http.get<Group[]>(`${this.url}`).pipe(
       catchError(error => {
         console.error('無法取得群組列表', error);
         return of([]);

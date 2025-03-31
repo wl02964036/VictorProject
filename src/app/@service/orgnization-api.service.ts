@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GetPasswordResponse, GetUnitResponse, GetUserResponse, PasswordModel, SavePasswordResponse, SaveUnitResponse, SaveUserResponse, Unit, User } from '../@models/organization.model';
 import { Observable } from 'rxjs';
 import { TreeNodeModel } from '../@models/base.model';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationApiService {
 
-  private url: string = "/angular/organization";
+  private url: string = `/angular/organization`;
 
   constructor(private http: HttpClient) { }
 

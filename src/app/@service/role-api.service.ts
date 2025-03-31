@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Role, RoleResponse } from '../@models/role.model';
 import { HttpClient } from '@angular/common/http';
 import { BaseResponse, TreeNodeModel } from '../@models/base.model';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleApiService {
 
-  private url: string = "/angular/role";
+  private url: string = `/angular/role`;
 
   constructor(private http: HttpClient) { }
 
