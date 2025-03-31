@@ -1,0 +1,106 @@
+{% extends "layouts/default" %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">修改權限</h1>
+<p class="mb-4"></p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>權限修改</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="button" class="update btn btn-warning">儲存</button>
+                <button type="button" class="reset btn btn-info">重填</button>
+                <button type="button" class="back btn btn-primary">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="userForm" action="{{ href("/permission/update") }}" method="post" novalidate>
+            <div class="form-group required">
+                <label for="unitName">所屬單位</label>
+                <input id="unitName" name="unitName" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ unitName }}">
+            </div>
+            <div class="form-group required">
+                <label for="username">帳號</label>
+                <input id="username" name="username" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ userBind.username }}">
+                <small id="usernameHelp" class="form-text text-muted">代碼需為英文和數字，不可重複</small>
+            </div>
+            <div class="form-group required">
+                <label for="displayName">姓名</label>
+                <input id="displayName" name="displayName" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ userBind.displayName }}">
+            </div>
+            <div class="form-group required">
+                <label for="roles0">隸屬角色</label>
+                {% set roleList = userBind.roles | split(',') %}
+                {% set classHandler = "" %}
+                {% for rt in roleTuples %}
+                    {% if loop.index == 0 %}
+                        {% set classHandler = "#roles" + loop.index %}
+                    {% else %}
+                        {% set classHandler = classHandler + ",#roles" + loop.index %}
+                    {% endif %}
+                {% endfor %}
+
+                {% for rt in roleTuples %}
+                    <div class="custom-control custom-checkbox">
+                        <input id="roles{{ loop.index }}" name="roles"
+                               type="checkbox" class="custom-control-input"
+                               value="{{ rt.v1 }}"
+                            {{ roleList contains rt.v1 ? "checked=\"checked\"" : "" }}
+                            {{ loop.first ? 'data-parsley-required="true" data-parsley-mincheck="1"' : ''}}
+                               data-parsley-class-handler="{{ classHandler }}"
+                               data-parsley-errors-container="#rolesError">
+                        <label class="custom-control-label" for="roles{{ loop.index }}">{{ rt.v2 }}</label>
+                    </div>
+                {% endfor %}
+                <div id="rolesError" class="controlError"></div>
+            </div>
+
+            <input type="hidden" id="unitCode" name="unitCode" value="{{ userBind.unitCode }}">
+            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ href("/static/sb-admin/vendor/application/customValidator.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        /* 配合 bootstrap 4，客製 parsley 錯誤訊息  */
+        var formInstance = $("#userForm").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            classHandler: function (ParsleyField) {
+                              return ParsleyField.$element;
+                          },
+            errorsWrapper: '<div class="invalid-feedback"></div>',
+            errorTemplate: "<div></div>"
+        });
+
+        $("button.update").on("click", function () {
+            $("#userForm").submit();
+            return false;
+        });
+
+        $("button.reset").on("click", function () {
+            formInstance.reset();
+            $("#userForm")[0].reset();
+            return false;
+        });
+
+        $("button.back").on("click", function () {
+            window.location.href = "{{ href("/permission/index") }}"
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

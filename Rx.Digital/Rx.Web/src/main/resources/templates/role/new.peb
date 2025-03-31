@@ -1,0 +1,210 @@
+{% extends "layouts/default" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ href("/static/sb-admin/vendor/jstree/themes/default/style.min.css") }}">
+{% endblock %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">新增角色</h1>
+<p class="mb-4"></p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>角色新增</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="button" class="create btn btn-warning">儲存</button>
+                <button type="button" class="reset btn btn-info">重填</button>
+                <button type="button" class="back btn btn-primary">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="roleForm" action="{{ href("/role/create") }}" method="post" novalidate>
+            <div class="form-group required">
+                <label for="code">代碼</label>
+                <input id="code" name="code" type="text" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-english-only
+                       data-parsley-maxlength="256"
+                       data-parsley-code-repeat
+                       value="{{ roleBind.code }}">
+                <small id="codeHelp" class="form-text text-muted">代碼需為英文，不可重複</small>
+            </div>
+            <div class="form-group required">
+                <label for="title">名稱</label>
+                <input id="title" name="title" type="text" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-maxlength="256"
+                       value="{{ roleBind.title }}">
+            </div>
+            <div class="form-group">
+                <label for="description">描述</label>
+                <textarea id="description" name="description"
+                          class="form-control" rows="3"
+                          data-parsley-maxlength="512">{{ roleBind.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="assignable">允許機關管理者設定</label>
+                <div class="custom-control custom-radio">
+                    <input id="assignable1" name="assignable" type="radio" value="true"
+                           class="custom-control-input"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#assignable1,#assignable2"
+                           data-parsley-errors-container="#assignableError">
+                    <label class="custom-control-label" for="assignable1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="assignable2" name="assignable" type="radio" value="false"
+                           class="custom-control-input"
+                           checked="checked"
+                           data-parsley-class-handler="#assignable1,#assignable2"
+                           data-parsley-errors-container="#assignableError">
+                    <label class="custom-control-label" for="assignable2">否</label>
+                </div>
+                <div id="assignableError" class="controlError"></div>
+            </div>
+            <div class="tree_box">
+                <div class="title">應用功能</div>
+                <div class="menuError invalid-feedback"></div>
+                <div id="menuTree"></div>
+            </div>
+
+            <p id="itemFields"></p>
+            <input type="hidden" name="{{_csrf.parameterName}}" value="{{_csrf.token}}">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script id="itemTemplate" type="text/template">
+    <input name="items[<%- index %>]" type="hidden" value="<%- menuId%>">
+</script>
+<script src="{{ href("/static/sb-admin/vendor/jstree/jstree.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/application/customValidator.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        var itemHtml = $('#itemTemplate').html();
+        var itemTemplate = _.template(itemHtml);
+
+        $("#menuTree")
+            .jstree({
+                core: {
+                    data: {
+                        url: "{{ href("/tree/menus") }}",
+                        data: function(node) {
+                            return { "node" : node.id };
+                        }
+                    },
+                    multiple: false,
+                    themes: {
+                        dots: false,
+                        stripes: false,
+                        responsive: true,
+                        variant: "large",
+                    },
+                    check_callback: false,
+                },
+                checkbox: {
+                    three_state : false,   // to avoid that fact that checking a node also check others
+                    whole_node : false,    // to avoid checking the box just clicking the node
+                    tie_selection : false, // for checking without selecting and selecting without checking
+                },
+                plugins : [
+                    "checkbox",
+                ],
+            });
+
+        /* 檢查代碼是否重複，使用 async: false，和 jquery deferred */
+        window.Parsley.addValidator("codeRepeat", {
+            validateString: function (value, requirement, instance) {
+                value = value.toUpperCase();
+                if (! value.startsWith("ROLE_")) {
+                    value = "ROLE_" + value;
+                }
+
+                var deferred = $.Deferred();
+                var xhr = $.ajax({
+                    url: "{{ href("/role/codeRepeat") }}",
+                    method: "GET",
+                    dataType: "text",
+                    async: false,
+                    data: {
+                        "code": value
+                    }
+                }).done(function(data, textStatus, jqXHR) {
+                    if (data !== "empty") {
+                        deferred.reject();
+                    } else {
+                        deferred.resolve();
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    deferred.reject();
+                });
+
+                return deferred.promise();
+            },
+            messages: { "zh-tw": "代碼不可重複"}
+        });
+
+        window.Parsley.on("form:validated", function (formInstance) {
+            var validated = true;
+
+            if (formInstance.isValid()) {
+                validated = true;
+            } else {
+                validated = false;
+            }
+
+            var length = $("#itemFields input:hidden").length;
+            if (length < 1) {
+                $("div.menuError").html("必需勾選一項以上的應用功能").show();
+                validated = false;
+            } else {
+                $("div.menuError").hide();
+            }
+
+            if (!validated)
+                formInstance.validationResult = false;
+        });
+
+        /* 配合 bootstrap 4，客製 parsley 錯誤訊息  */
+        var formInstance = $("#roleForm").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            classHandler: function (ParsleyField) {
+                              return ParsleyField.$element;
+                          },
+            errorsWrapper: '<div class="invalid-feedback"></div>',
+            errorTemplate: "<div></div>"
+        });
+
+        $("button.create").on("click", function () {
+            $("#itemFields").empty();
+
+            var items = $("#menuTree").jstree("get_checked", true);
+            $.each(items, function (index, elem) {
+                 var hiddenField = itemTemplate({index: index, menuId: elem.id});
+                 $("#itemFields").append(hiddenField);
+            });
+
+            $("#roleForm").submit();
+            return false;
+        });
+
+        $("button.reset").on("click", function () {
+            formInstance.reset();
+            $("#roleForm")[0].reset();
+            $("#itemFields").empty();
+            return false;
+        });
+
+        $("button.back").on("click", function () {
+            window.location.href = "{{ href("/role/index") }}"
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

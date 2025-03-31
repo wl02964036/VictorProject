@@ -1,0 +1,126 @@
+{% extends "layouts/default" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ href("/static/sb-admin/vendor/datatables/dataTables.bootstrap4.min.css") }}">
+{% endblock %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">API系統管理</h1>
+<p class="mb-4">
+{% if message is not null %}
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+</p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>API系統管理</span>
+            <button class="new btn btn-info btn-icon-split float-right">
+                <span class="icon text-white-50">
+                  <i class="fas fa-plus"></i>
+                </span>
+                <span class="text">新增</span>
+            </button>
+        </h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-bordered table-striped" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th width="10%">序號</th>
+                        <th>名稱</th>
+                        <th width="25%">clientId</th>
+                        <th width="25%">clientSecret</th>
+                        <th>建立日期</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ href("/static/sb-admin/vendor/datatables/jquery.dataTables.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/datatables/dataTables.bootstrap4.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/datatables/springify.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        var dataTable = $("#dataTable").DataTable({
+            language: {
+                url: "{{ href("/static/sb-admin/vendor/datatables/Chinese-traditional.json") }}"
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ href("/api-client/query") }}",
+                type: "POST",
+                headers: getHeaders(),
+                data: springify,
+            },
+            order: [],
+            columns: [
+                {
+                    name: "index",
+                    data: null,
+                    width: "10%",
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row, meta) {
+                        var length = dataTable.page.len();
+                        var pageNumber = dataTable.page.info().page;
+                        var offset = pageNumber * length;
+                        return offset + meta.row + 1;
+                    },
+                },
+                {
+                    name: "title",
+                    data: "title",
+                    orderable: false,
+                    searchable: true,
+                    render: function (data, type, row, meta) {
+                        return "<a href='{{ href("/api-client/edit") }}?id="
+                                    + row.id + "'>" + data + "</a>";
+                    }
+                },
+                {
+                    name: "clientId",
+                    data: "clientId",
+                    width: "25%",
+                    className: "text-wrap text-break",
+                    orderable: false,
+                    searchable: true,
+                },
+                {
+                    name: "clientSecret",
+                    data: "clientSecret",
+                    width: "25%",
+                    orderable: false,
+                    searchable: false,
+                },
+                {
+                    name: "createdAt",
+                    data: "createdAt",
+                    orderable: true,
+                    searchable: false,
+                }
+            ],
+        });
+
+        $("button.new").on("click", function (e) {
+            window.location.href = "{{ href("/api-client/new") }}";
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

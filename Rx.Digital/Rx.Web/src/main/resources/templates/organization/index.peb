@@ -1,0 +1,137 @@
+{% extends "layouts/default" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ href("/static/sb-admin/vendor/jstree/themes/default/style.min.css") }}">
+{% endblock %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">人員組織</h1>
+<p class="mb-4">
+{% if message is not null %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endif %}
+</p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>人員組織</span>
+            <form id="filterForm" class="form-inline mt-3" action="" method="post" style="flex-direction: row-reverse;">
+                <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+                <button id="excel" class="excel btn btn-primary ml-2 mb-2">匯出xls報表</button>
+            </form>
+        </h6>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-auto">
+                <h6 class="mb-2 title text-info">人員組織樹</h6>
+                <div id="organizationTree"></div>
+            </div>
+            <div id="contentFrame" class="col">
+                <iframe src="about:blank"
+                        name="mainframe" id="mainframe"
+                        width="100%" height="100%"
+                        frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ href("/static/sb-admin/vendor/jstree/jstree.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/iframe-resizer/iframeResizer.min.js") }}"></script>
+<script>
+    var targetId = null;
+
+    // refresh tree data
+    function refresh(target) {
+        targetId = target;
+        $("#organizationTree").jstree(true).refresh();
+    }
+
+    $(document).ready(function () {
+
+        $("#organizationTree")
+            .jstree({
+                core: {
+                    data: {
+                        url: "{{ href("/tree/organization") }}",
+                        data: function(node) {
+                            return { "node" : node.id };
+                        }
+                    },
+                    multiple : false,
+                    themes: {
+                        dots: true,
+                        stripes: false,
+                        responsive: false,
+                        variant: "large",
+                    },
+                },
+            })
+            .on("refresh.jstree", function (e, data) {
+                if (data.instance._data.core.selected) {
+                    if (data.instance._data.core.selected.length > 0) {
+                        console.log("open >> " + data.instance._data.core.selected[0]);
+                        $("#organizationTree").jstree(true).open_node(data.instance._data.core.selected[0]);
+                    }
+                }
+
+                if (targetId != null) {
+                    $("#organizationTree").jstree(true).deselect_all(true);
+                    $("#organizationTree").jstree(true).select_node(targetId, true, true);
+                    targetId = null;
+                }
+                return false;
+            })
+            .on("select_node.jstree", function (e, data) {
+                var node = data.node;
+
+                // 檢查是不是 refresh 過
+                if (targetId) {
+                    if (targetId != node.id) {
+                        if (node.data === "unit") {
+                            $("#mainframe").attr("src", "{{ href("/organization/editUnit") }}?node=" + node.id.replace("unit_", ""));
+                        } else if (node.data === "user") {
+                            $("#mainframe").attr("src", "{{ href("/organization/editUser") }}?node=" + node.id.replace("user_", ""));
+                        } else {
+                            $("#mainframe").attr("src", "about:blank");
+                        }
+                    } else {
+                        // 不重新載入 iframe
+                    }
+                } else {
+                    if (node.data === "unit") {
+                        $("#mainframe").attr("src", "{{ href("/organization/editUnit") }}?node=" + node.id.replace("unit_", ""));
+                    } else if (node.data === "user") {
+                        $("#mainframe").attr("src", "{{ href("/organization/editUser") }}?node=" + node.id.replace("user_", ""));
+                    } else {
+                        $("#mainframe").attr("src", "about:blank");
+                    }
+                }
+            });
+
+        var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1);
+        $("#mainframe").iFrameResize({
+            heightCalculationMethod: isOldIE ? 'max' : 'lowestElement',
+            checkOrigin: false
+        });
+
+        $("#excel").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $("#filterForm").attr("action", "{{ href("/organization/report") }}");
+            $("#filterForm").attr("target", "_blank");
+            $("#filterForm").submit();
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

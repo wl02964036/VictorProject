@@ -1,0 +1,136 @@
+{% extends "layouts/iframe" %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">新增單位</h1>
+<p class="mb-4"></p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>單位新增</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="button" class="create btn btn-warning">儲存</button>
+                <button type="button" class="reset btn btn-info">重填</button>
+                <button type="button" class="back btn btn-primary">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="unitForm" action="{{ href("/organization/createUnit") }}" method="post" novalidate>
+            <div class="form-group required">
+                <label for="code">單位代碼</label>
+                <input id="code" name="code" type="text" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-english-number-only
+                       data-parsley-maxlength="256"
+                       data-parsley-code-repeat
+                       value="{{ unitBind.code }}">
+                <small id="codeHelp" class="form-text text-muted">代碼需為英文和數字，不可重複</small>
+            </div>
+            <div class="form-group required">
+                <label for="displayName">名稱</label>
+                <input id="displayName" name="displayName" type="text" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-maxlength="256"
+                       value="{{ unitBind.displayName }}">
+            </div>
+            <div class="form-group">
+                <label for="email">電子郵件信箱</label>
+                <input id="email" name="email" type="text" class="form-control"
+                       data-parsley-maxlength="256"
+                       data-parsley-type="email"
+                       value="{{ unitBind.email }}">
+            </div>
+            <div class="form-group">
+                <label for="fax">傳真號碼</label>
+                <input id="fax" name="fax" type="text" class="form-control"
+                       data-parsley-maxlength="128"
+                       data-parsley-pattern="^[0-9]{2,4}-\d{7,8}(#\d{1,6})?$"
+                       value="{{ unitBind.fax }}">
+                <small id="faxHelp" class="form-text text-muted">傳真號碼格式為：04-66XXXXXX#YYY</small>
+            </div>
+            <div class="form-group">
+                <label for="tel">市區聯絡電話</label>
+                <input id="tel" name="tel" type="text" class="form-control"
+                       data-parsley-maxlength="128"
+                       data-parsley-pattern="^[0-9]{2,4}-\d{7,8}(#\d{1,6})?$"
+                       value="{{ unitBind.tel }}">
+                <small id="telHelp" class="form-text text-muted">市區電話格式為：04-22289111#888</small>
+            </div>
+            <div class="form-group">
+                <label for="weight">排序欄位</label>
+                <input id="weight" name="weight" type="text" class="form-control"
+                       data-parsley-type="integer"
+                       value="{{ unitBind.weight }}">
+                <small id="weightHelp" class="form-text text-muted">數字越小越前面</small>
+            </div>
+            <input type="hidden" id="parentCode" name="parentCode" value="{{ unitBind.parentCode }}">
+            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ href("/static/sb-admin/vendor/application/customValidator.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        /* 檢查代碼是否重複，使用 async: false，和 jquery deferred */
+        window.Parsley.addValidator("codeRepeat", {
+            validateString: function (value, requirement, instance) {
+                value = value.toUpperCase();
+
+                var deferred = $.Deferred();
+                var xhr = $.ajax({
+                    url: "{{ href("/organization/unitCodeRepeat") }}",
+                    method: "GET",
+                    dataType: "text",
+                    async: false,
+                    cache: false,
+                    data: {
+                        "code": value
+                    }
+                }).done(function(data, textStatus, jqXHR) {
+                    if (data !== "empty") {
+                        deferred.reject();
+                    } else {
+                        deferred.resolve();
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    deferred.reject();
+                });
+
+                return deferred.promise();
+            },
+            messages: { "zh-tw": "代碼不可重複"}
+        });
+
+        /* 配合 bootstrap 4，客製 parsley 錯誤訊息  */
+        var formInstance = $("#unitForm").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            classHandler: function (ParsleyField) {
+                              return ParsleyField.$element;
+                          },
+            errorsWrapper: '<div class="invalid-feedback"></div>',
+            errorTemplate: "<div></div>"
+        });
+
+        $("button.create").on("click", function () {
+            $("#unitForm").submit();
+            return false;
+        });
+
+        $("button.reset").on("click", function () {
+            formInstance.reset();
+            $("#unitForm")[0].reset();
+            return false;
+        });
+
+        $("button.back").on("click", function () {
+            window.location.href = "{{ href("/organization/editUnit") }}?node={{ unitBind.parentCode }}"
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

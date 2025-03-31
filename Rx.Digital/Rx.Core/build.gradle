@@ -1,0 +1,57 @@
+plugins {
+	id 'java'
+    id "java-library"
+    id "org.springframework.boot" version "2.7.7"
+    id "io.spring.dependency-management" version "1.0.10.RELEASE"
+    id "project-report"
+}
+
+ext {
+    set("spring-security.version", "5.6.3")
+}
+
+group = 'com.rx.core'
+version = '0.0.1'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+            extendsFrom developmentOnly
+    }
+    compileOnly {
+            extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+    // spring security
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    
+    implementation "org.springframework.data:spring-data-commons:2.6.0"
+    
+	// 對JDBI支援
+    implementation "org.jdbi:jdbi3-sqlobject:3.15.1"
+    implementation "org.jdbi:jdbi3-spring4:3.15.1"
+    implementation "org.jdbi:jdbi3-jackson2:3.15.1"
+    
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

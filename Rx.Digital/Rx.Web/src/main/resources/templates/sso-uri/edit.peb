@@ -1,0 +1,88 @@
+{% extends "layouts/default" %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">單一登入URI設定</h1>
+<p class="mb-4"></p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>設定單一登入URI</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="button" class="update btn btn-warning">儲存</button>
+                <button type="button" class="reset btn btn-info">重填</button>
+                <button type="button" class="back btn btn-primary">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="ssoURIForm" action="{{ href("/sso-uri/update") }}" method="post" novalidate>
+            <div class="form-group required">
+                <label for="clientId">clientId</label>
+                <input id="clientId" name="clientId" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ redirectUriBind.clientId }}">
+            </div>
+            <div class="form-group required">
+                <label for="clientSecret">clientSecret</label>
+                <input id="clientSecret" name="clientSecret" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ redirectUriBind.clientSecret }}">
+            </div>
+            <div class="form-group required">
+                <label for="title">系統名稱</label>
+                <input id="title" name="title" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ redirectUriBind.title }}">
+            </div>
+            <div class="form-group required">
+                <label for="item">單一登入重定向URI</label>
+                <input id="item" name="item" type="text" class="form-control"
+                       data-parsley-type="url"
+                       value="{{ redirectUriBind.item }}">
+            </div>
+
+            <input type="hidden" name="id" value="{{ redirectUriBind.id }}">
+            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ href("/static/sb-admin/vendor/application/customValidator.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        /* 配合 bootstrap 4，客製 parsley 錯誤訊息  */
+        var formInstance = $("#ssoURIForm").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            classHandler: function (ParsleyField) {
+                              return ParsleyField.$element;
+                          },
+            errorsWrapper: '<div class="invalid-feedback"></div>',
+            errorTemplate: "<div></div>"
+        });
+
+        $("button.update").on("click", function () {
+            if (confirm("確定要儲存目前的重定位的網址嗎?")) {
+                 $("#ssoURIForm").submit();
+                 return false;
+            }
+            return false;
+        });
+
+        $("button.reset").on("click", function () {
+            formInstance.reset();
+            $("#ssoURIForm")[0].reset();
+            return false;
+        });
+
+        $("button.back").on("click", function () {
+            window.location.href = "{{ href("/sso-uri/index") }}"
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

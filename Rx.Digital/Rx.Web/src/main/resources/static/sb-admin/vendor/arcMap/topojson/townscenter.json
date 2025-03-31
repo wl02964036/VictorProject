@@ -1,0 +1,136 @@
+{
+  "objects": [
+    {
+      "COUNTYNAME": "台北市",
+      "COUNTYLON": "121.68",
+	  "COUNTYLAT": "25.09",
+      "COUNTYSCALE": "100000"
+    },
+    {
+      "COUNTYNAME": "新北市",
+      "COUNTYLON": "121.865",
+	  "COUNTYLAT": "25.01",	  
+      "COUNTYSCALE": "43000"
+    },
+    {
+      "COUNTYNAME": "桃園市",
+      "COUNTYLON": "121.5",
+	  "COUNTYLAT": "24.88",		  
+      "COUNTYSCALE": "48000"
+    },    
+    {
+      "COUNTYNAME": "新竹市",
+      "COUNTYLON": "121.35",
+	  "COUNTYLAT": "24.7",		  
+      "COUNTYSCALE": "50000"
+    },
+    {
+      "COUNTYNAME": "新竹縣",
+      "COUNTYLON": "121.25",
+	  "COUNTYLAT": "24.77",		  
+      "COUNTYSCALE": "65000"
+    },    
+    {
+      "COUNTYNAME": "台中市",
+      "COUNTYLON": "121.25",
+	  "COUNTYLAT": "24.15",		  
+      "COUNTYSCALE": "33000"
+    },
+    {
+      "COUNTYNAME": "台南市",
+      "COUNTYLON": "120.54",
+	  "COUNTYLAT": "23.17",		  
+      "COUNTYSCALE": "50000"
+    },    
+    {
+      "COUNTYNAME": "高雄市",
+      "COUNTYLON": "120.8",
+	  "COUNTYLAT": "23",		  
+      "COUNTYSCALE": "25000"
+    },    
+    {
+      "COUNTYNAME": "台東縣",
+      "COUNTYLON": "121.3",
+	  "COUNTYLAT": "23.02",		  
+      "COUNTYSCALE": "30000"
+    },
+    {
+      "COUNTYNAME": "宜蘭縣",
+      "COUNTYLON": "121.75",
+	  "COUNTYLAT": "24.75",		  
+      "COUNTYSCALE": "50000"
+    },
+    {
+      "COUNTYNAME": "花蓮縣",
+      "COUNTYLON": "121.65",
+	  "COUNTYLAT": "23.95",	
+      "COUNTYSCALE": "28000"
+    },
+    {
+      "COUNTYNAME": "金門縣",
+      "COUNTYLON": "119",
+	  "COUNTYLAT": "24.7",		  
+      "COUNTYSCALE": "30000"
+    },
+    {
+      "COUNTYNAME": "南投縣",
+      "COUNTYLON": "121.1",
+	  "COUNTYLAT": "23.96",		  
+      "COUNTYSCALE": "43000"
+    },
+    {
+      "COUNTYNAME": "屏東縣",
+      "COUNTYLON": "120.9",
+	  "COUNTYLAT": "22.55",		  
+      "COUNTYSCALE": "35000"
+    },
+    {
+      "COUNTYNAME": "苗栗縣",
+      "COUNTYLON": "121.01",
+	  "COUNTYLAT": "24.58",		  
+      "COUNTYSCALE": "70000"
+    },
+    {
+      "COUNTYNAME": "基隆市",
+      "COUNTYLON": "121.75",
+	  "COUNTYLAT": "25.15",		  
+      "COUNTYSCALE": "220000"
+    },
+    {
+      "COUNTYNAME": "連江縣",
+      "COUNTYLON": "120.3",
+	  "COUNTYLAT": "26.25",		  
+      "COUNTYSCALE": "60000"
+    },
+    {
+      "COUNTYNAME": "雲林縣",
+      "COUNTYLON": "120.44",
+	  "COUNTYLAT": "23.7",		  
+      "COUNTYSCALE": "60000"
+    },
+    {
+      "COUNTYNAME": "嘉義市",
+      "COUNTYLON": "120.48",
+	  "COUNTYLAT": "23.5",		  
+      "COUNTYSCALE": "250000"
+    },
+    {
+      "COUNTYNAME": "嘉義縣",
+      "COUNTYLON": "120.62",
+	  "COUNTYLAT": "23.5",		  
+      "COUNTYSCALE": "50000"
+    },
+    {
+      "COUNTYNAME": "彰化縣",
+      "COUNTYLON": "120.54",
+	  "COUNTYLAT": "24.05",		  
+      "COUNTYSCALE": "80000"
+    },
+    {
+      "COUNTYNAME": "澎湖縣",
+      "COUNTYLON": "119.7",
+	  "COUNTYLAT": "23.58",		  
+      "COUNTYSCALE": "55000"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf_header" content="{{ _csrf.headerName }}">
+    <meta name="_csrf" content="{{ _csrf.token }}">
+    <title>台中通第三方驗證</title>
+    <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/vendor/fontawesome-free/css/all.min.css") }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/css/sb-admin-2.min.css") }}">
+</head>
+<body style="background-color: #efefef;">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="p-5">
+                                {% if message == "succeed" %}
+                                    <h4>請稍後...</h4>
+                                    {% elseif message == "N" %}
+                                    <h4>請稍後...</h4>
+                                    {% elseif message == "R" %}
+                                    <h4>請稍後...</h4>
+                                    {% else %}
+                                    <h4>{{ message }}</h4>
+                                {% endif %}
+                                <button type="button" class="closeSelf btn btn-primary">關閉</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="{{ href("/static/sb-admin/vendor/jquery/jquery.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
+<script>
+    function closeSelf() {
+        {% if message == "succeed" %}
+            if (window.opener && !window.opener.closed) {
+                window.opener.location.href = "{{ href("/consent") }}" ;
+            }
+        {% elseif message == "N" %}
+            if (window.opener && !window.opener.closed) {
+                alert("此社群帳號沒有綁定到任何台中通數位市民帳號\n" +
+                      "1. 若您無帳號，請註冊新帳號\n" +
+                      "2. 若您已有帳號，登入後請至\"個人化服務 > 我的社群帳號\"進行綁定");
+                window.opener.callRequest("{{ category }}", "{{ communityId }}", "{{ email }}", "{{ displayName }}");
+            }
+        {% else %}
+            if (window.opener && !window.opener.closed) {
+                window.opener.callReload();
+            }
+        {% endif %}
+        window.close();
+    }
+
+    $(document).ready(function () {
+
+        $("button.closeSelf").on("click", function () {
+            closeSelf();
+        });
+
+        setTimeout(function () {
+             closeSelf();
+        }, 3 * 1000);
+
+    });
+</script>
+</body>
+</html>

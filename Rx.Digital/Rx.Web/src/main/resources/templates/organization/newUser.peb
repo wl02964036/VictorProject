@@ -1,0 +1,257 @@
+{% extends "layouts/iframe" %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">新增員工</h1>
+<p class="mb-4"></p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>員工新增</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="button" class="create btn btn-warning">儲存</button>
+                <button type="button" class="reset btn btn-info">重填</button>
+                <button type="button" class="back btn btn-primary">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="userForm" action="{{ href("/organization/createUser") }}" method="post" novalidate>
+            <div class="form-group required">
+                <label for="username">帳號</label>
+                <input id="username" name="username" type="text" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-english-number-only
+                       data-parsley-maxlength="256"
+                       data-parsley-username-repeat
+                       value="{{ userBind.username }}">
+                <small id="usernameHelp" class="form-text text-muted">代碼需為英文和數字，不可重複</small>
+            </div>
+            <div class="form-group required">
+                <label for="code">密碼</label>
+                <input id="code" name="code" type="password" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-english-number-only
+                       data-parsley-minlength="8"
+                       data-parsley-maxlength="256"
+                       value="{{ userBind.password }}">
+                <small id="passwordHelp" class="form-text text-muted">密碼需為8位以上的英數字組合</small>
+            </div>
+            <div class="form-group required">
+                <label for="confirmCode">密碼確認</label>
+                <input id="confirmCode" name="confirmCode" type="password" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-english-number-only
+                       data-parsley-minlength="8"
+                       data-parsley-maxlength="256"
+                       data-parsley-equalto="#code"
+                       value="{{ userBind.confirmPassword }}">
+                <small id="passwordHelp" class="form-text text-muted">密碼確認，請再輸入密碼一次</small>
+            </div>
+            <div class="form-group required">
+                <label for="displayName">姓名</label>
+                <input id="displayName" name="displayName" type="text" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-maxlength="256"
+                       value="{{ userBind.displayName }}">
+            </div>
+            <div class="form-group">
+                <label for="sex1">性別</label>
+                <div class="custom-control custom-radio">
+                    <input id="sex1" name="sex" type="radio" class="custom-control-input"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#sex1,#sex2,#sex3"
+                           data-parsley-errors-container="#sexError"
+                           value="male">
+                    <label class="custom-control-label" for="sex1">男</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="sex2" name="sex" type="radio" class="custom-control-input"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#sex1,#sex2,#sex3"
+                           data-parsley-errors-container="#sexError"
+                           value="female">
+                    <label class="custom-control-label" for="sex2">女</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="sex3" name="sex" type="radio" class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#sex1,#sex2,#sex3"
+                           data-parsley-errors-container="#sexError"
+                           value="none">
+                    <label class="custom-control-label" for="sex3">不填答</label>
+                </div>
+                <div id="sexError" class="controlError"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">電子郵件信箱</label>
+                <input id="email" name="email" type="text" class="form-control"
+                       data-parsley-maxlength="256"
+                       data-parsley-type="email"
+                       value="{{ userBind.email }}">
+            </div>
+            <div class="form-group">
+                <label for="tel">市區聯絡電話</label>
+                <input id="tel" name="tel" type="text" class="form-control"
+                       data-parsley-maxlength="128"
+                       data-parsley-pattern="^[0-9]{2,4}-\d{7,8}(#\d{1,6})?$"
+                       value="{{ userBind.tel }}">
+                <small id="telHelp" class="form-text text-muted">市區電話格式為：04-22289111#888</small>
+            </div>
+            <div class="form-group">
+                <label for="enabled1">帳號啟用</label>
+                <div class="custom-control custom-radio">
+                    <input id="enabled1" name="enabled" type="radio" class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#enabled1,#enabled2"
+                           data-parsley-errors-container="#enabledError"
+                           value="true">
+                    <label class="custom-control-label" for="enabled1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="enabled2" name="enabled" type="radio" class="custom-control-input"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#enabled1,#enabled2"
+                           data-parsley-errors-container="#enabledError"
+                           value="false">
+                    <label class="custom-control-label" for="enabled2">否</label>
+                </div>
+                <div id="enabledError" class="controlError"></div>
+            </div>
+            <div class="form-group">
+                <label for="expired1">密碼過期</label>
+                <div class="custom-control custom-radio">
+                    <input id="expired1" name="expired" type="radio" class="custom-control-input"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#expired1,#expired2"
+                           data-parsley-errors-container="#expiredError"
+                           value="true">
+                    <label class="custom-control-label" for="expired1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="expired2" name="expired" type="radio" class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#expired1,#expired2"
+                           data-parsley-errors-container="#expiredError"
+                           value="false">
+                    <label class="custom-control-label" for="expired2">否</label>
+                </div>
+                <div id="expiredError" class="controlError"></div>
+            </div>
+            <div class="form-group">
+                <label for="locked1">帳號鎖定</label>
+                <div class="custom-control custom-radio">
+                    <input id="locked1" name="locked" type="radio" class="custom-control-input"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#locked1,#locked2"
+                           data-parsley-errors-container="#lockedError"
+                           value="true">
+                    <label class="custom-control-label" for="locked1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="locked2" name="locked" type="radio" class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#locked1,#locked2"
+                           data-parsley-errors-container="#lockedError"
+                           value="false">
+                    <label class="custom-control-label" for="locked2">否</label>
+                </div>
+                <div id="lockedError" class="controlError"></div>
+            </div>
+            <div class="form-group required">
+                <label for="roles0">所屬角色</label>
+                {% set classHandler = "" %}
+                {% for rt in roleTuples %}
+                    {% if loop.index == 0 %}
+                        {% set classHandler = "#roles" + loop.index %}
+                    {% else %}
+                        {% set classHandler = classHandler + ",#roles" + loop.index %}
+                    {% endif %}
+                {% endfor %}
+
+                {% for rt in roleTuples %}
+                    <div class="custom-control custom-checkbox">
+                        <input id="roles{{ loop.index }}" name="roles"
+                               type="checkbox" class="custom-control-input"
+                               value="{{ rt.v1 }}"
+                               {{ loop.first ? 'data-parsley-required="true" data-parsley-mincheck="1"' : ''}}
+                               data-parsley-class-handler="{{ classHandler }}"
+                               data-parsley-errors-container="#rolesError">
+                        <label class="custom-control-label" for="roles{{ loop.index }}">{{ rt.v2 }}</label>
+                    </div>
+                {% endfor %}
+                <div id="rolesError" class="controlError"></div>
+            </div>
+
+            <input type="hidden" id="unitCode" name="unitCode" value="{{ userBind.unitCode }}">
+            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ href("/static/sb-admin/vendor/application/customValidator.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        /* 檢查帳號是否重複，使用 async: false，和 jquery deferred */
+        window.Parsley.addValidator("usernameRepeat", {
+            validateString: function (value, requirement, instance) {
+                var deferred = $.Deferred();
+                var xhr = $.ajax({
+                    url: "{{ href("/organization/usernameRepeat") }}",
+                    method: "GET",
+                    dataType: "text",
+                    async: false,
+                    cache: false,
+                    data: {
+                        "username": value
+                    }
+                }).done(function(data, textStatus, jqXHR) {
+                    if (data !== "empty") {
+                        deferred.reject();
+                    } else {
+                        deferred.resolve();
+                    }
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    deferred.reject();
+                });
+
+                return deferred.promise();
+            },
+            messages: { "zh-tw": "帳號不可重複"}
+        });
+
+        /* 配合 bootstrap 4，客製 parsley 錯誤訊息  */
+        var formInstance = $("#userForm").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            classHandler: function (ParsleyField) {
+                              return ParsleyField.$element;
+                          },
+            errorsWrapper: '<div class="invalid-feedback"></div>',
+            errorTemplate: "<div></div>"
+        });
+
+        $("button.create").on("click", function () {
+            $("#userForm").submit();
+            return false;
+        });
+
+        $("button.reset").on("click", function () {
+            formInstance.reset();
+            $("#userForm")[0].reset();
+            return false;
+        });
+
+        $("button.back").on("click", function () {
+            window.location.href = "{{ href("/organization/editUnit") }}?node={{ userBind.unitCode }}"
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

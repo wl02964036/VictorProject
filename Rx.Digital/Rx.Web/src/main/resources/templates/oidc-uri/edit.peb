@@ -1,0 +1,148 @@
+{% extends "layouts/default" %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">第三方Login重導向URI設定</h1>
+<p class="mb-4"></p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>設定第三方Login重導向URI</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="button" class="update btn btn-warning">儲存</button>
+                <button type="button" class="reset btn btn-info">重填</button>
+                <button type="button" class="back btn btn-primary">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="oidcURIForm" action="{{ href("/oidc-uri/update") }}" method="post" novalidate>
+            <div class="form-group required">
+                <label for="clientId">clientId</label>
+                <input id="clientId" name="clientId" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ redirectUriBind.clientId }}">
+            </div>
+            <div class="form-group required">
+                <label for="clientSecret">clientSecret</label>
+                <input id="clientSecret" name="clientSecret" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ redirectUriBind.clientSecret }}">
+            </div>
+            <div class="form-group required">
+                <label for="title">系統名稱</label>
+                <input id="title" name="title" type="text" class="form-control"
+                       readonly="readonly"
+                       value="{{ redirectUriBind.title }}">
+            </div>
+            <div id="redirectUris" class="form-group">
+                <label for="items0">重定向URI(redirect uri)</label>
+                <small id="redirectUrisHelp" class="form-text text-muted">請填入要重定位的網址，例如：https://www.google.com.tw/callback</small>
+                {% for uri in redirectUriBind.items %}
+                    <div class="input-group mb-3">
+                        <input id="items{{ loop.index }}" name="items[{{ loop.index }}]" type="text"
+                               value="{{ uri }}"
+                               class="form-control">
+                        {% if loop.index == 0 %}
+                            <div class="input-group-append">
+                                <button class="addUri btn btn-warning" type="button"><i class="fa fa-plus"></i></button>
+                            </div>
+                        {% else %}
+                            <div class="input-group-append">
+                                <button class="removeUri btn btn-danger" type="button"><i class="fa fa-minus"></i></button>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="input-group mb-3">
+                        <input id="items0" name="items[0]" type="text"
+                               value=""
+                               class="form-control">
+                        <div class="input-group-append">
+                            <button class="addUri btn btn-warning" type="button"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <input type="hidden" name="id" value="{{ redirectUriBind.id }}">
+            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script id="redirectUriTemplate" type="text/template">
+    <div class="input-group mb-3">
+        <input id="items<%- index %>" name="items[<%- index %>]" type="text"
+               value=""
+               class="form-control">
+        <div class="input-group-append">
+            <button class="removeUri btn btn-danger" type="button"><i class="fa fa-minus"></i></button>
+        </div>
+    </div>
+</script>
+
+<script src="{{ href("/static/sb-admin/vendor/application/customValidator.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        var compiled = _.template($("#redirectUriTemplate").html());
+
+        var itemsIndex = {{ (redirectUriBind.items|length) + 1}};
+
+        /* 配合 bootstrap 4，客製 parsley 錯誤訊息  */
+        var formInstance = $("#oidcURIForm").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            classHandler: function (ParsleyField) {
+                              return ParsleyField.$element;
+                          },
+            errorsWrapper: '<div class="invalid-feedback"></div>',
+            errorTemplate: "<div></div>"
+        });
+
+        $("button.update").on("click", function () {
+            if (confirm("確定要儲存目前的重定位的網址嗎?")) {
+                 $("#oidcURIForm").submit();
+                 return false;
+            }
+            return false;
+        });
+
+        $("button.reset").on("click", function () {
+            formInstance.reset();
+            $("#oidcURIForm")[0].reset();
+            return false;
+        });
+
+        $("button.back").on("click", function () {
+            window.location.href = "{{ href("/oidc-uri/index") }}"
+            return false;
+        });
+
+        $(".addUri.btn").on("click", function (e) {
+            e.preventDefault();
+            $(compiled({index:  itemsIndex})).appendTo($("#redirectUris"));
+            itemsIndex = itemsIndex + 1;
+            return false;
+        });
+
+        $("#redirectUris").on("click", ".removeUri.btn", function (e) {
+            e.preventDefault();
+            $(this).parents("div.input-group").remove();
+
+            // 重編編號
+            $("#redirectUris input[type='text']").each(function (index, item) {
+                $(item).attr("id", "items" + index);
+                $(item).attr("name", "items[" + index + "]");
+                itemsIndex = index;
+            });
+
+            itemsIndex = itemsIndex + 1;
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

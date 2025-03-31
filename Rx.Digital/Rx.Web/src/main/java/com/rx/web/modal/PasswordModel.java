@@ -1,0 +1,16 @@
+package com.rx.web.modal;
+
+import java.io.Serializable;
+
+import lombok.Data;
+
+@Data
+public class PasswordModel implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private String username;
+	private String displayName;
+	private String code;
+	private String confirmCode;
+
+}

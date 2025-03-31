@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf_header" content="{{ _csrf.headerName }}">
+    <meta name="_csrf" content="{{ _csrf.token }}">
+{#    <meta name="google-signin-client_id" content="{{ googleClientId }}">#}
+    <title>台中通第三方驗證</title>
+{#    <script src="https://apis.google.com/js/api:client.js"></script>#}
+    <script src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v10.0&appId={{ facebookAppId }}&autoLogAppEvents=1" nonce="bNd3J2Hi" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/vendor/fontawesome-free/css/all.min.css") }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/css/sb-admin-2.min.css") }}">
+    <link href="{{ href("/static/js/bootstrap-4.4.1-dist/css/bootstrap.min.css") }}" rel="stylesheet" type="text/css">
+    <link href="{{ href("/static/css/style.css") }}" type="text/css" rel="stylesheet">
+{#    {% if beans.profileName contains "test" %}#}
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+{#    {% endif %}#}
+</head>
+<body>
+    <div class="container">
+        <div class="login col-12">
+            {% if message is not null %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {% if message == "帳號不存在" %}
+                        <strong>{{ message }}，請至<a href="{{ registerURL }}" title="台中通" target="_blank">台中通</a>註冊</strong>
+                    {% else %}
+                        <strong>{{ message }}</strong>
+                    {% endif %}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+            <div class="logo">
+                {% if beans.profileName == "taichung" %}
+                    <img src="{{ href("/static/images/logo_bk_f.svg") }}" width="50%" alt="台中通logo">
+                {% elseif beans.profileName == "taichungtest" %}
+                    <img src="{{ href("/static/images/logo_bk1.svg") }}" width="50%" alt="台中通logo">
+                {% else %}
+                    <img src="{{ href("/static/images/logo_bk_f.svg") }}" width="50%" alt="台中通logo">
+                {% endif %}
+            </div>
+            <p>台中通第三方驗證登入</p>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">登入帳號驗證</a>
+                    <a class="nav-link" id="certificate-tab" data-toggle="tab" href="#certificate" role="tab" aria-controls="certificate" aria-selected="false">自然人憑證驗證</a>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                    <div class="clearfix">
+                        <form id="loginForm" name="loginForm" action="{{ href("/doUserLoginV2") }}" method="post" novalidate>
+                            <div class="id required">
+                                <label for="username">登入帳號</label>
+                                <input type="text" class="form-control form-control-user"
+                                    id="username" name="username" placeholder="請輸入帳號"
+                                    data-parsley-required="true"
+                                    value="{{ userBind.username }}">
+                            </div>
+                            <div class="password required">
+                                <label for="password">密碼</label>
+                                <input type="password" class="form-control form-control-user"
+                                    id="password" name="password" placeholder="請輸入密碼"
+                                    autocomplete="off" data-parsley-required="true"
+                                    value="{{ userBind.password }}">
+                            </div>
+                            <div class="send">
+                                <div class="col-lg-12"><input type="submit" value="登入"></div>
+                                <div class="bt02 col-lg-12">
+                                    <ul>
+                                        <li><a href="javascript:void(0);" title="facebook登入" onclick="fb_login();"><img src="{{ href("/static/images/icon_facebook.svg") }}" alt="facebook登入"></a></li>
+{#                                        {% if beans.profileName contains "test" %}#}
+                                            <li>
+                                                <div id="googleSignIn">
+{#                                                <div id="g_id_onload"#}
+{#                                                     data-client_id="{{ googleClientId }}"#}
+{#                                                     data-callback="googleSignInCallback"#}
+{#                                                     data-ux_mode="popup"#}
+{#                                                     data-auto_prompt="false">#}
+{#                                                </div>#}
+{#                                                <div class="g_id_signin"#}
+{#                                                     data-type="icon"#}
+{#                                                     data-size="large"#}
+{#                                                     data-theme="outline"#}
+{#                                                     data-text="signin_with"#}
+{#                                                     data-shape="square">#}
+{#                                                </div>#}
+                                            </li>
+{#                                        {% else %}#}
+{#                                            <li><a id="googleLogin" href="javascript:void(0);" title="google登入"><img src="{{ href("/static/images/icon_google.svg") }}" alt="google登入"></a></li>#}
+{#                                        {% endif %}#}
+                                        <li><a href="javascript:void(0);" title="Line登入" onclick="line_login();"><img src="{{ href("/static/images/icon_line.svg") }}" alt="Line登入"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+                        </form>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="certificate" role="tabpanel" aria-labelledby="certificate-tab">
+                    <div class="clearfix">
+                        <div class="alert alert-dark mt-3" role="alert">
+                            使用此功能前，請先安裝內政部自然人憑證跨平台網頁元件，並備妥讀卡機和您的自然人憑證<br>
+                            <a href="https://moica.nat.gov.tw/rac_plugin.html" title="內政部跨平台網頁元件下載(另開視窗)" target="_blank">內政部跨平台網頁元件下載</a><br>
+                            將自然人憑證放入讀卡機後，請按送出按鈕，請稍等一下，待簽章完成後，上傳資料。
+                        </div>
+                        <div id="info"></div>
+                        <div id="httpObject"></div>
+                        <form id="loginCForm" action="{{ href("/doCertificateLogin") }}" method="post" class="needs-validation" novalidate>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="slotDescription">可用讀卡機</label>
+                                    <select id="slotDescription" name="slotDescription" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="pin">Pin Code</label>
+                                    <input id="pin" name="pin" type="password" autocomplete="off" class="form-control">
+                                </div>
+                            </div>
+                            <input id="ResultSignedData" type="hidden" name="b64SignedData">
+                            <input id="returnCode" type="hidden" name="returnCode">
+                            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+                            <div class="row">
+                                <button id="upload" type="submit" class="col-4 ml-1 btn btn-primary btn-sm">送出</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="reg">尚未加入台中通？
+                <a href="{{ registerURL }}" title="台中通馬上註冊" target="_blank">馬上註冊</a>或是
+                <a href="{{ forgotAccountURL }}" title="台中通忘記帳號" target="_blank">忘記帳號</a>｜
+                <a href="{{ forgotCodeURL }}" title="台中通忘記密碼" target="_blank">忘記密碼</a>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ href("/static/sb-admin/vendor/jquery/jquery.min.js") }}"></script>
+    <script src="{{ href("/static/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{{ href("/static/sb-admin/vendor/jquery-easing/jquery.easing.min.js") }}"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="{{ href("/static/sb-admin/js/sb-admin-2.min.js") }}"></script>
+    <script src="{{ href("/static/sb-admin/vendor/parsley/parsley.min.js") }}"></script>
+    <script src="{{ href("/static/sb-admin/vendor/parsley/i18n/zh_tw.js") }}"></script>
+    <script src="{{ href("/static/sb-admin/vendor/application/errorcode.js") }}"></script>
+    <script src="{{ href("/static/sb-admin/vendor/application/sweetalert.min.js") }}"></script>
+    <!-- Google Sign In -->
+    <script src="{{ href("/static/js/application/jwt-decode.js") }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            // 憑證讀取 scripts
+            var postTarget;
+
+            $("#loginForm").parsley({
+                errorClass: "is-invalid",
+                successClass: "is-valid",
+                classHandler: function (ParsleyField) {
+                    return ParsleyField.$element;
+                },
+                errorsWrapper: '<div class="invalid-feedback"></div>',
+                errorTemplate: "<div></div>"
+            });
+
+            function getTbsPackage() {
+                var tbsData = {};
+                tbsData["tbs"] = "TBS";
+                tbsData["tbsEncoding"] = "NONE";
+                tbsData["hashAlgorithm"] = "SHA256";
+                tbsData["withCardSN"] = "true";
+                tbsData["slotDescription"] = document.getElementById("slotDescription").value;
+                tbsData["pin"] = document.getElementById("pin").value;
+                tbsData["nonce"] = "";
+                tbsData["func"] = "MakeSignature";
+                tbsData["signatureType"] = "PKCS7";
+                var json = JSON.stringify(tbsData ).replace(/\+/g,"%2B");;
+                return json;
+            }
+
+            function setSignature(signature) {
+                var ret = JSON.parse(signature);
+                document.getElementById("ResultSignedData").value = ret.signature;
+                document.getElementById("returnCode").value = ret.ret_code;
+                if (ret.ret_code != 0) {
+                    alert(MajorErrorReason(ret.ret_code));
+                    if (ret.last_error)
+                        alert(MinorErrorReason(ret.last_error));
+                    return false;
+                } else {
+                    var signedData = document.getElementById("ResultSignedData").value;
+                    if (signedData === "") {
+                        alert("無憑證讀取資料，請檢查讀卡機卡片是否插好");
+                        return false;
+                    }
+
+                    var returnCode = document.getElementById("returnCode").value;
+                    if (returnCode !== "0") {
+                         alert("憑證讀取錯誤");
+                         return false;
+                    }
+
+                    $("#loginCForm").submit();
+                    return false;
+                }
+            }
+
+            function receiveMessage(event) {
+                if (console) {
+                    console.debug(event);
+                }
+
+                // 安全起見，這邊應填入網站位址檢查
+                if (event.origin != "http://localhost:61161") {
+                    return;
+                }
+
+                try {
+                    var ret = JSON.parse(event.data);
+                    if (ret.func) {
+                        if (ret.func == "getTbs") {
+                            var json = getTbsPackage()
+                            postTarget.postMessage(json, "*");
+                        } else if (ret.func == "sign") {
+                            setSignature(event.data);
+                        }
+                    } else {
+                        if (console) {
+                            console.error("無此函式和功能");
+                        }
+                    }
+                } catch(e) {
+                    // errorhandle
+                    if (console) {
+                        console.error(e);
+                    }
+                }
+            }
+
+            if (window.addEventListener) {
+                window.addEventListener("message", receiveMessage, false);
+            } else {
+                //for IE8
+                window.attachEvent("onmessage", receiveMessage);
+            }
+
+            // for IE8
+            var console = console || {"log":function(){}, "debug":function(){}, "error":function(){}};
+
+            function postData(target, data) {
+                if (!http.sendRequest) {
+                    return null;
+                }
+                http.url = target;
+                http.actionMethod = "POST";
+                var code = http.sendRequest(data);
+                if (code!=0)
+                    return null;
+                return http.responseText;
+            }
+
+            function setSlotOptions(output) {
+                var ret = JSON.parse(output);
+                if (ret.ret_code == 0x76000031) {
+                    alert(window.location.hostname + "非信任網站，請先加入信任網站");
+                    return;
+                }
+                var slots = ret.slots;
+                var selectSlot = document.getElementById("slotDescription");
+                selectSlot.innerHTML = "";
+                for (var index in slots){
+                    if (slots[index].token instanceof Object) {
+                        var opt = document.createElement("option");
+                        opt.value = slots[index].slotDescription;
+                        opt.innerHTML = slots[index].slotDescription+" 卡號:["+slots[index].token.serialNumber+"]";
+                        selectSlot.appendChild(opt);
+                    }
+                }
+            }
+
+            function getImageInfo(ctx) {
+                var output = "";
+                for(i = 0; i < 2000; i++) {
+                    var data = ctx.getImageData(i,0,1,1).data;
+                    if (data[2]==0)
+                        break;
+                    output = output + String.fromCharCode(data[2],data[1],data[0]);
+                }
+                if (output == "")
+                    output = '{"ret_code": 1979711501, "message": "執行檔錯誤或逾時"}';
+                return output;
+            }
+
+            function initialize() {
+                var img = null;
+                var ctx;
+                var output = "";
+                var ua = window.navigator.userAgent;
+
+                // not IE
+                if (ua.indexOf("MSIE") == -1 && ua.indexOf("Trident") == -1) {
+                    img = document.createElement("img");
+                    img.crossOrigin = "anonymous";
+                    img.src = "http://localhost:61161/p11Image.bmp";
+                    var canvas = document.createElement("canvas");
+                    canvas.width = 2000;
+                    canvas.height = 1;
+                    ctx = canvas.getContext("2d");
+
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0);
+                        output = getImageInfo(ctx);
+                        setSlotOptions(output);
+                    };
+
+                    img.onerror = function() {
+                        document.getElementById("info").value= "未安裝客戶端程式或未啟動服務";
+                    };
+                } else {
+                    document.getElementById("httpObject").innerHTML='<OBJECT id="http" width=1 height=1 style="LEFT: 1px; TOP: 1px" type="application/x-httpcomponent" VIEWASTEXT></OBJECT>';
+                    output = postData("http://localhost:61161/pkcs11info","");
+                    if (output == null) {
+                        document.getElementById("info").value= "未安裝客戶端程式或未啟動服務";
+                        return;
+                    } else {
+                       setSlotOptions(output);
+                    }
+                }
+            }
+
+            function popupCenter(url, title, w, h) {
+                var top = window.screen.height - h;
+                top = top > 0 ? top/2 : 0;
+
+                var left = window.screen.width - w;
+                left = left > 0 ? left/2 : 0;
+
+                postTarget = window.open(url, title, 'toolbar=no, scrollbars=no, resizable=no, location=no, menubar=no, status=no, width='
+                                             + w + ', height=' + h + ', top=' + top + ', left=' + left);
+                if (window.focus)
+                    postTarget.focus();
+            }
+
+            function makeSignature() {
+                var ua = window.navigator.userAgent;
+                //is IE, use ActiveX
+                if(ua.indexOf("MSIE") != -1 || ua.indexOf("Trident") != -1) {
+                    swal({
+                        title: "簽章中",
+                        icon: "http://localhost:61161/waiting.gif",
+                        buttons: false,
+                        timer: 3500
+                     }).then( function () {
+                         var tbsPackage = getTbsPackage();
+                         document.getElementById("httpObject").innerHTML='<OBJECT id="http" width=1 height=1 style="LEFT: 1px; TOP: 1px" type="application/x-httpcomponent" VIEWASTEXT></OBJECT>';
+                         var data = postData("http://localhost:61161/sign","tbsPackage=" + tbsPackage);
+
+                        if (!data) {
+                            alert("尚未安裝元件");
+                        } else {
+                            setSignature(data);
+                        }
+                     });
+                } else {
+                    popupCenter("http://localhost:61161/popupForm", "簽章中", 160, 200);
+                }
+            }
+
+            $("#upload").on("click", function (e) {
+                e.preventDefault();
+
+                var slotDescriptionValue = document.getElementById("slotDescription").value;
+                if (! slotDescriptionValue) {
+                     alert("請檢查卡片是否已經放到讀卡機中，並選擇您的讀卡機");
+                     return false;
+                }
+
+                var pinValue = document.getElementById("pin").value;
+                if (! pinValue) {
+                     alert("pin code 不可為空");
+                     return false;
+                }
+
+                makeSignature();
+                return false;
+            });
+
+            $('a#certificate-tab[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+                initialize();
+            });
+
+        });
+    </script>
+    <script>
+    function googleSignInCallback(response) {
+
+        const responsePayload = jwt_decode(response.credential);
+
+        console.log("ID: " + responsePayload.sub);
+        console.log('Full Name: ' + responsePayload.name);
+        console.log("Email: " + responsePayload.email);
+
+        bind('google', responsePayload.sub, responsePayload.email, responsePayload.name);
+    }
+
+    window.onGoogleLibraryLoad = () => {
+        google.accounts.id.initialize({
+          client_id: '{{ googleClientId }}',
+          callback: googleSignInCallback,
+          ux_mode: "popup",
+          state_cookie_domain: "taichung.gov.tw"
+        });
+
+        google.accounts.id.renderButton( document.getElementById("googleSignIn"), {
+                type: "icon",
+                size: "large",
+                shape: "rectangular",
+            }
+        )
+    };
+
+{#        var googleUser = {};#}
+
+        /**
+         * spring csrf，ajax submit 的時候需要加到 header
+         */
+        function getHeaders() {
+            var csrfHeaders = {};
+            csrfHeaders[$("meta[name='_csrf_header']").attr("content")] = $("meta[name='_csrf']").attr("content");
+            return csrfHeaders;
+        }
+
+{#        function attachSignin(element) {#}
+{#            console.log(element.id);#}
+{#            auth2.attachClickHandler(element, {},#}
+{#                function(googleUser) {#}
+{#                    console.log('email: ' + googleUser.getBasicProfile().getEmail());#}
+{#                    console.log('Signed in: ' + googleUser.getBasicProfile().getId() + "-" + googleUser.getBasicProfile().getName());#}
+{#                    bind('google', googleUser.getBasicProfile().getId(), googleUser.getBasicProfile().getEmail(), googleUser.getBasicProfile().getName());#}
+{#                }, function(error) {#}
+{#                    console.log('Sign-in error', error);#}
+{#                    alert("Google 登入失敗!");#}
+{#                }#}
+{#            );#}
+{#        }#}
+
+{#        var startGoogle = function() {#}
+{#            gapi.load('auth2', function(){#}
+{#                // Retrieve the singleton for the GoogleAuth library and set up the client.#}
+{#                auth2 = gapi.auth2.init({#}
+{#                    client_id: '{{ googleClientId }}',#}
+{#                    cookiepolicy: 'single_host_origin',#}
+{#                    // Request scopes in addition to 'profile' and 'email'#}
+{#                    scope: 'profile'#}
+{#                });#}
+{#                attachSignin(document.getElementById('googleLogin'));#}
+{#            });#}
+{#        };#}
+
+        function fb_login() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    FB.api('/me?fields=id,name,email', function(response) {
+                        console.log(response);
+                        console.log('Signed in: ' + response.id + "-" + response.name);
+                        bind('facebook', response.id, response.email, response.name);
+                    });
+                } else {
+                    console.log('Sign-in error');
+                    alert('登入失敗!');
+                }
+            }, {
+                scope: 'public_profile,email'
+            });
+        }
+
+        function line_login() {
+            var redirectURL = "{{ lineRedirectTo }}";
+            var url = "{{ lineLoginURL }}" + "?redirectURL=" + encodeURI(redirectURL);
+            window.open(url, "line", "width=680,height=640,resizable=yes");
+            return false;
+        }
+
+        function bind(category, communityId, email, displayName){
+            $.ajax({
+                url: "{{ href("/community-login-v2") }}",
+                headers: getHeaders(),
+                data: {
+                    "category": category,
+                    "communityId": communityId,
+                    "email": email,
+                    "displayName": displayName
+                },
+                method: "POST",
+                dataType: "text"
+            }).done(function(data, textStatus, jqXHR) {
+                if (data == "S") {
+                    alert("登入成功!");
+                    window.location.href = "{{ href("/consent") }}";
+                } else if (data == "N") {
+                    alert("此社群帳號沒有綁定到任何台中通數位市民帳號，登入後請至\"個人化服務 > 我的社群帳號\"進行綁定後再重新登入");
+                }
+                {% if beans.profileName == "taichungtest" or beans.profileName == "test" %}
+                else if (data == "integrate"){
+                    alert("此帳號有存在重複的e指通/購物節帳號，將前往帳號整併畫面");
+                    window.location.href = "{{ href("/integrate") }}";
+                }
+                {% endif %}
+                else {
+                    alert(data);
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown);
+            });
+        }
+
+        /* 被子視窗呼叫 */
+        function callReload() {
+            window.location.reload();
+        }
+
+        function callRequest(category, communityId, email, displayName) {
+            window.location.reload();
+        }
+    </script>
+{#    <script>#}
+{#         startGoogle();#}
+{#    </script>#}
+</body>
+</html>

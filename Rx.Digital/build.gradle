@@ -1,0 +1,22 @@
+plugins {
+    id "java"
+}
+
+subprojects {
+
+    apply plugin: "java"
+
+    repositories {
+		mavenCentral()
+        flatDir name: "dependencies", dirs: ["lib"]
+    }
+
+    compileJava {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+        options.encoding = "UTF-8"
+        options.compilerArgs << "-parameters" << "-Xlint:deprecation" << "-Xlint:unchecked"
+        options.fork = true
+    }
+
+}

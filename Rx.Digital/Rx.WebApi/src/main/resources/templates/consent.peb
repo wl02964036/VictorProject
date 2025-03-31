@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="_csrf_header" content="{{ _csrf.headerName }}">
+    <meta name="_csrf" content="{{ _csrf.token }}">
+    <title>台中通第三方驗證</title>
+    <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/vendor/fontawesome-free/css/all.min.css") }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/css/sb-admin-2.min.css") }}">
+</head>
+<body style="background-color: #efefef;">
+<div class="container">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="p-5" style="padding-bottom: 5px !important;">
+                                <p class="text-center">
+                                    {% if beans.profileName == "taichung" %}
+                                        <img src="{{ href("/static/images/logo_bk_f.svg") }}" width="50%" alt="台中通logo">
+                                    {% elseif beans.profileName == "taichungtest" %}
+                                        <img src="{{ href("/static/images/logo_bk1.svg") }}" width="50%" alt="台中通logo">
+                                    {% else %}
+                                        <img src="{{ href("/static/images/logo_bk_f.svg") }}" width="50%" alt="台中通logo">
+                                    {% endif %}
+                                </p>
+                                <h5 class="card-title text-center">
+                                    是否同意<q class="text-primary">{{ apiClient.title }}</q>，<br>存取您下列的個人資訊 ?
+                                </h5>
+                                <p class="card-text mt-4 text-info">{{ apiClient.description | raw }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="p-5" style="padding-bottom: 5px !important;">
+                            <ul class="list-group list-group-flush">
+                                {% for scope in scopes %}
+                                    <li class="list-group-item">{{ scope.description | raw }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="p-5 text-center" style="padding-bottom: 5px !important;">
+                                <form id="consentForm" action="{{ href("/doConsent") }}" method="post">
+                                    <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+                                    <button name="accept" value="confirm" class="btn btn-primary btn-lg">同意</button>
+                                    <button name="accept" value="deny" class="btn btn-warning btn-lg">拒絕</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="{{ href("/static/sb-admin/vendor/jquery/jquery.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
+<!-- Core plugin JavaScript-->
+<script src="{{ href("/static/sb-admin/vendor/jquery-easing/jquery.easing.min.js") }}"></script>
+<!-- Custom scripts for all pages-->
+<script src="{{ href("/static/sb-admin/js/sb-admin-2.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/parsley/parsley.min.js") }}"></script>
+<script src="{{ href("/static/sb-admin/vendor/parsley/i18n/zh_tw.js") }}"></script>
+<script>
+    $(document).ready(function () {
+    });
+</script>
+</body>
+</html>

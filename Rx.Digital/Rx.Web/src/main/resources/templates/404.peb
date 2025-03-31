@@ -1,0 +1,30 @@
+{% extends loginUser == null ? "layouts/blank" : "layouts/default" %}
+
+{% block main %}
+<div class="text-center">
+    <div class="error mx-auto" data-text="404">404</div>
+    <p class="lead text-gray-800 mb-5">您存取的資源或網頁不存在</p>
+    <p class="text-gray-500 mb-0">請存取其他的資源或網頁</p>
+    <a href="{{ href("/") }}">&larr; 回到首頁</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function inIframe() {
+        try {
+            return window.self !== window.top;
+        } catch (e) {
+            return true;
+        }
+    }
+
+    $(document).ready(function () {
+        //
+        if (inIframe()) {
+            if (window.top) {
+                window.top.location.href = window.location.href;
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,5 @@
+rootProject.name = 'Rx.Digital'
+
+include ":Rx.Core"
+include ":Rx.Web"
+include ":Rx.WebApi"

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="_csrf_header" content="{{ _csrf.headerName }}">
+        <meta name="_csrf" content="{{ _csrf.token }}">
+        <title>數位市民管理平台</title>
+        <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/vendor/fontawesome-free/css/all.min.css") }}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+        <link rel="stylesheet" type="text/css" href="{{ href("/static/sb-admin/css/sb-admin-2.min.css") }}">
+    </head>
+    <body class="bg-gradient-primary">
+        <div class="container">
+            <!-- Outer Row -->
+            <div class="row justify-content-center">
+                <div class="col-xl-10 col-lg-12 col-md-9">
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row">
+                                <div class="col-lg-6 d-none d-lg-block bg-login-image" style="min-height: 420px;"></div>
+                                <div class="col-lg-6">
+                                    <div class="p-5">
+                                        <div class="text-center">
+                                            {% if request.getParameter("logout") is not null %}
+                                                <h1 class="h4 text-primary mb-4">您已經登出</h1>
+                                            {% elseif request.getParameter("error") is not null %}
+                                                {% set errorMessage = session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION").message %}
+                                                <h1 class="h4 text-primary mb-4">{{ errorMessage }}</h1>
+                                            {% else %}
+                                                <h1 class="h4 text-primary mb-4">歡迎回來</h1>
+                                            {% endif %}
+                                        </div>
+                                        <form id="loginForm" action="" class="user" method="post" novalidate>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                       id="username" name="username" placeholder="請輸入帳號"
+                                                       data-parsley-required="true">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" class="form-control form-control-user"
+                                                       id="password" name="password" placeholder="請輸入密碼"
+                                                       autocomplete="off" data-parsley-required="true">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                       id="captcha" name="captcha"
+                                                       placeholder="請輸入下方驗證碼"
+                                                       data-parsley-required="true">
+                                            </div>
+                                            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+                                            <input type="submit" class="btn btn-primary btn-user btn-block" value="登入">
+
+                                            <div id="captchaImage" class="form-group" style="margin-top: 20px;">
+                                                <img src="{{ href("/captchaImage") }}" width="96" height="43" alt="圖形驗證碼">
+                                            </div>
+                                            {% set browserType = request.getHeader("User-Agent") %}
+                                            {% if browserType.indexOf("MSIE") > -1 or browserType.indexOf("Trident") > -1 %}
+                                                <div id="captchaAudio" class="form-group">
+                                                    <button type="button" class="btn btn-secondary play">播放</button>
+                                                </div>
+                                            {% else %}
+                                                <div id="captchaAudio" class="form-group">
+                                                    <audio controls="true" src="{{ href("/captchaAudio") }}" type="audio/wav"></audio>
+                                                </div>
+                                            {% endif %}
+
+                                            <button class="reload btn btn-info" style="margin-bottom: 20px;">重新產生驗證碼</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bootstrap core JavaScript-->
+        <script src="{{ href("/static/sb-admin/vendor/jquery/jquery.min.js") }}"></script>
+        <script src="{{ href("/static/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
+        <!-- Core plugin JavaScript-->
+        <script src="{{ href("/static/sb-admin/vendor/jquery-easing/jquery.easing.min.js") }}"></script>
+        <!-- Custom scripts for all pages-->
+        <script src="{{ href("/static/sb-admin/js/sb-admin-2.min.js") }}"></script>
+        <script src="{{ href("/static/sb-admin/vendor/parsley/parsley.min.js") }}"></script>
+        <script src="{{ href("/static/sb-admin/vendor/parsley/i18n/zh_tw.js") }}"></script>
+        <script>
+            function inIframe() {
+                try {
+                    return window.self !== window.top;
+                } catch (e) {
+                    return true;
+                }
+            }
+
+            $(document).ready(function () {
+
+                $("button.reload").on("click", function (e) {
+                    $.ajax({
+                        url: "{{ href("/reloadCaptcha") }}",
+                        method: "GET",
+                        dataType: "text",
+                    }).done(function(data, textStatus, jqXHR) {
+                        $("#captchaImage").empty();
+                        $("#captchaAudio").empty();
+
+                        $("#captchaImage").html(
+                            '<img src="{{ href("/captchaImage") }}' + '?t=' + Date.now() + '" width="96" height="43" alt="驗證碼">'
+                        );
+
+                        {% if browserType.indexOf("MSIE") > -1 or browserType.indexOf("Trident") > -1 %}
+                            $("#captchaAudio").html(
+                                '<button type="button" class="btn btn-secondary play">播放</button>'
+                            );
+                        {% else %}
+                            $("#captchaAudio").html(
+                                '<audio controls="true" src="{{ href("/captchaAudio") }}" type="audio/wav"></audio>'
+                            );
+                        {% endif %}
+
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    });
+
+                    return false;
+                });
+
+                $("body").on("click", "button.play", function () {
+                    $.ajax({
+                        url: "{{ href("/captchaNumber") }}?t=" + Date.now(),
+                        method: "GET",
+                        dataType: "text",
+                    }).done(function(data, textStatus, jqXHR) {
+                        window.open("{{ href("/wav/") }}" + data + ".wav", "_blank");
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                    });
+                    return false;
+                });
+
+                $("#loginForm").parsley({
+                    errorClass: "is-invalid",
+                    successClass: "is-valid",
+                    classHandler: function (ParsleyField) {
+                        return ParsleyField.$element;
+                    },
+                    errorsWrapper: '<div class="invalid-feedback"></div>',
+                    errorTemplate: "<div></div>"
+                });
+
+                $(document).ready(function () {
+                    //
+                    if (inIframe()) {
+                        if (window.top) {
+                            window.top.location.href = window.location.href;
+                        }
+                    }
+                });
+
+            });
+        </script>
+    </body>
+</html>

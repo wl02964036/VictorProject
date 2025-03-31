@@ -1,0 +1,6 @@
+{% extends 'layouts/default' %}
+
+{% block main %}
+<!-- Page Heading -->
+<h1 class="h3 mb-4 text-gray-800">首頁</h1>
+{% endblock %}

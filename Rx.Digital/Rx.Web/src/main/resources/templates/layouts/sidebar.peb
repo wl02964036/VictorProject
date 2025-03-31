@@ -1,0 +1,31 @@
+{% for item in sidebarMenus %}
+   {% if item.path == "#" %}
+       <li class="nav-item">
+           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menu-{{ item.uuid }}" aria-expanded="false" aria-controls="menu-{{ item.uuid }}">
+               <i class="fas fa-fw fa-folder"></i>
+               <span>{{ item.title }}</span>
+           </a>
+           <div id="menu-{{ item.uuid }}" class="collapse" aria-labelledby="heading-{{ item.uuid }}" data-parent="#accordionSidebar">
+               <div class="bg-white py-2 collapse-inner rounded">
+                   <h6 class="collapse-header">{{ item.title }}:</h6>
+                   {% for c in item.children %}
+                       <a class="collapse-item text-wrap" href="{{ c.path }}" title="{{ c.title }}">{{ c.title }}</a>
+                   {% endfor %}
+               </div>
+           </div>
+       </li>
+       {% if not loop.last %}
+           <hr class="sidebar-divider my-0">
+       {% endif %}
+   {% else %}
+       <li class="nav-item">
+           <a class="nav-link" href="{{ item.path }}" title="{{ item.title }}">
+               <i class="fas fa-fw fa-list-alt"></i>
+               <span>{{ item.title }}</span>
+           </a>
+       </li>
+       {% if not loop.last %}
+           <hr class="sidebar-divider my-0">
+       {% endif %}
+   {% endif %}
+{% endfor %}

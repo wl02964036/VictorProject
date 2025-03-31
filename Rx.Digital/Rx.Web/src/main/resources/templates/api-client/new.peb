@@ -1,0 +1,203 @@
+{% extends "layouts/default" %}
+
+{% block main %}
+<h1 class="h3 mb-2 text-gray-800">新增API Client</h1>
+<p class="mb-4"></p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">
+            <span>API Client新增</span>
+            <div class="btn-group float-right" role="group" aria-label="功能選單">
+                <button type="button" class="create btn btn-warning">儲存</button>
+                <button type="button" class="reset btn btn-info">重填</button>
+                <button type="button" class="back btn btn-primary">回上頁</button>
+            </div>
+        </h6>
+    </div>
+    <div class="card-body">
+        <form id="apiClientForm" action="{{ href("/api-client/create") }}" method="post" novalidate>
+            <div class="form-group required">
+                <label for="title">系統名稱</label>
+                <input id="title" name="title" type="text" class="form-control"
+                       data-parsley-required="true"
+                       data-parsley-maxlength="256"
+                       value="{{ apiClientBind.title }}">
+            </div>
+            <div class="form-group">
+                <label for="description">系統描述</label>
+                <textarea id="description" name="description"
+                          class="form-control" rows="3"
+                          data-parsley-maxlength="1024">{{ apiClientBind.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="contractUnit">聯絡單位名稱</label>
+                <input id="contractUnit" name="contractUnit" type="text" class="form-control"
+                       data-parsley-maxlength="256"
+                       value="{{ apiClientBind.contractUnit }}">
+            </div>
+            <div class="form-group">
+                <label for="contractName">聯絡人姓名</label>
+                <input id="contractName" name="contractName" type="text" class="form-control"
+                       data-parsley-maxlength="256"
+                       value="{{ apiClientBind.contractName }}">
+            </div>
+            <div class="form-group">
+                <label for="contractMail">聯絡電子郵件信箱</label>
+                <input id="contractMail" name="contractMail" type="text" class="form-control"
+                       data-parsley-maxlength="256"
+                       data-parsley-type="email"
+                       value="{{ apiClientBind.contractMail }}">
+            </div>
+            <div class="form-group">
+                <label for="contractPhone">聯絡電話號碼</label>
+                <input id="contractPhone" name="contractPhone" type="text" class="form-control"
+                       data-parsley-maxlength="256"
+                       value="{{ apiClientBind.contractPhone }}">
+            </div>
+            <div class="form-group required">
+                <label for="oidcEnabled">允許使用 第三方登入 API</label>
+                <div class="custom-control custom-radio">
+                    <input id="oidcEnabled1" name="oidcEnabled" type="radio" value="true"
+                           class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#oidcEnabled1,#oidcEnabled2"
+                           data-parsley-errors-container="#oidcEnabledError">
+                    <label class="custom-control-label" for="oidcEnabled1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="oidcEnabled2" name="oidcEnabled" type="radio" value="false"
+                           class="custom-control-input"
+                           data-parsley-class-handler="#oidcEnabled1,#oidcEnabled2"
+                           data-parsley-errors-container="#oidcEnabledError">
+                    <label class="custom-control-label" for="oidcEnabled2">否</label>
+                </div>
+                <div id="oidcEnabledError" class="controlError"></div>
+            </div>
+            <div class="form-group required">
+                <label for="ssoEnabled">允許使用 Single Sign On API</label>
+                <div class="custom-control custom-radio">
+                    <input id="ssoEnabled1" name="ssoEnabled" type="radio" value="true"
+                           class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#ssoEnabled1,#ssoEnabled2"
+                           data-parsley-errors-container="#ssoEnabledError">
+                    <label class="custom-control-label" for="ssoEnabled1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="ssoEnabled2" name="ssoEnabled" type="radio" value="false"
+                           class="custom-control-input"
+                           data-parsley-class-handler="#ssoEnabled1,#ssoEnabled2"
+                           data-parsley-errors-container="#ssoEnabledError">
+                    <label class="custom-control-label" for="ssoEnabled2">否</label>
+                </div>
+                <div id="ssoEnabledError" class="controlError"></div>
+            </div>
+            <div class="form-group required">
+                <label for="messageEnabled">允許使用 訊息接收 API</label>
+                <div class="custom-control custom-radio">
+                    <input id="messageEnabled1" name="messageEnabled" type="radio" value="true"
+                           class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#messageEnabled1,#messageEnabled2"
+                           data-parsley-errors-container="#messageEnabledError">
+                    <label class="custom-control-label" for="messageEnabled1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="messageEnabled2" name="messageEnabled" type="radio" value="false"
+                           class="custom-control-input"
+                           data-parsley-class-handler="#messageEnabled1,#messageEnabled2"
+                           data-parsley-errors-container="#messageEnabledError">
+                    <label class="custom-control-label" for="messageEnabled2">否</label>
+                </div>
+                <div id="messageEnabledError" class="controlError"></div>
+            </div>
+            <div class="form-group required">
+                <label for="citizenSearchEnabled">允許使用 會員查詢 API</label>
+                <div class="custom-control custom-radio">
+                    <input id="citizenSearchEnabled1" name="citizenSearchEnabled" type="radio" value="true"
+                           class="custom-control-input"
+                           checked="checked"
+                           data-parsley-required="true"
+                           data-parsley-class-handler="#citizenSearchEnabled1,#citizenSearchEnabled2"
+                           data-parsley-errors-container="#mcitizenSearchEnabledError">
+                    <label class="custom-control-label" for="citizenSearchEnabled1">是</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="citizenSearchEnabled2" name="citizenSearchEnabled" type="radio" value="false"
+                           class="custom-control-input"
+                           data-parsley-class-handler="#citizenSearchEnabled1,#citizenSearchEnabled2"
+                           data-parsley-errors-container="#citizenSearchEnabledError">
+                    <label class="custom-control-label" for="citizenSearchEnabled2">否</label>
+                </div>
+                <div id="citizenSearchEnabledError" class="controlError"></div>
+            </div>
+            <div class="form-group required">
+                <label for="scope0">允許取得的個資</label>
+                {% set classHandler = "" %}
+                {% for s in scopes %}
+                    {% if loop.index == 0 %}
+                        {% set classHandler = "#scopes" + loop.index %}
+                    {% else %}
+                        {% set classHandler = classHandler + ",#scopes" + loop.index %}
+                    {% endif %}
+                {% endfor %}
+
+                {% for s in scopes %}
+                    <div class="custom-control custom-checkbox">
+                        <input id="scopes{{ loop.index }}" name="scopes"
+                               type="checkbox" class="custom-control-input"
+                               value="{{ s.scope }}"
+                               {{ loop.first ? 'checked="checked" onclick="return false;" data-parsley-required="true" data-parsley-mincheck="1"' : ''}}
+                               data-parsley-class-handler="{{ classHandler }}"
+                               data-parsley-errors-container="#scopesError">
+                        <label class="custom-control-label" for="scopes{{ loop.index }}">
+                            ({{ s.scope }})&nbsp;{{ s.description }}
+                        </label>
+                    </div>
+                {% endfor %}
+                <div id="scopesError" class="controlError"></div>
+            </div>
+            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ href("/static/sb-admin/vendor/application/customValidator.js") }}"></script>
+<script>
+    $(document).ready(function () {
+
+        /* 配合 bootstrap 4，客製 parsley 錯誤訊息  */
+        var formInstance = $("#apiClientForm").parsley({
+            errorClass: "is-invalid",
+            successClass: "is-valid",
+            classHandler: function (ParsleyField) {
+                              return ParsleyField.$element;
+                          },
+            errorsWrapper: '<div class="invalid-feedback"></div>',
+            errorTemplate: "<div></div>"
+        });
+
+        $("button.create").on("click", function () {
+            $("#apiClientForm").submit();
+            return false;
+        });
+
+        $("button.reset").on("click", function () {
+            formInstance.reset();
+            $("#apiClientForm")[0].reset();
+            return false;
+        });
+
+        $("button.back").on("click", function () {
+            window.location.href = "{{ href("/api-client/index") }}"
+            return false;
+        });
+
+    });
+</script>
+{% endblock %}

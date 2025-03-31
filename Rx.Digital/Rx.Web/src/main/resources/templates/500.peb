@@ -1,0 +1,30 @@
+{% extends loginUser == null ? "layouts/blank" : "layouts/default" %}
+
+{% block main %}
+<div class="text-center">
+    <div class="error mx-auto" data-text="500">500</div>
+    <p class="lead text-gray-800 mb-5">伺服器發生錯誤</p>
+    <p class="text-gray-500 mb-0">看起來在我們的系統中，發現了一個小故障，請再試一下</p>
+    <a href="{{ href("/") }}">&larr; 回到首頁</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    function inIframe() {
+        try {
+            return window.self !== window.top;
+        } catch (e) {
+            return true;
+        }
+    }
+
+    $(document).ready(function () {
+        //
+        if (inIframe()) {
+            if (window.top) {
+                window.top.location.href = window.location.href;
+            }
+        }
+    });
+</script>
+{% endblock %}

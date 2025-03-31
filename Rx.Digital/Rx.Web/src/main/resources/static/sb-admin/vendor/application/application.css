@@ -1,0 +1,12 @@
+.form-group.required > label:after {
+    content: "*";
+    color: red;
+}
+
+.no_checkbox > i.jstree-checkbox {
+    display: none;
+}
+
+.controlError .invalid-feedback {
+    display: block;
+}

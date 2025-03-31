@@ -1,0 +1,101 @@
+plugins {
+    id "war"
+    id "org.springframework.boot" version "2.7.7"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id "project-report"
+}
+
+if (hasProperty('buildScan')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'false'
+    }
+}
+
+ext {
+    set("spring-security.version", "5.6.3")
+}
+
+group = 'com.rx.web'
+version = '0.0.1'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+	// 引入Rx.Core (對應project name)
+    implementation project(":Rx.Core")
+    
+    // spring aop
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+    
+    // spring validation
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.jodconverter:jodconverter-spring-boot-starter:4.4.2"
+	
+	// tomcat server
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    compileOnly 'org.springframework.boot:spring-boot-starter-tomcat'
+	
+	// mssql 連線
+    runtimeOnly "com.microsoft.sqlserver:mssql-jdbc:8.4.1.jre11"
+    
+	// 對JDBI支援
+    implementation "org.jdbi:jdbi3-sqlobject:3.15.1"
+    implementation "org.jdbi:jdbi3-spring4:3.15.1"
+    implementation "org.jdbi:jdbi3-jackson2:3.15.1"
+    
+    // 支援Tuple寫法
+    implementation "org.jooq:jool:0.9.14"
+    
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    
+    // excel or doc
+    implementation 'org.apache.poi:poi:4.1.2'
+    implementation 'org.apache.poi:poi-ooxml:4.1.2'
+    
+    // redis
+//    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+//    implementation "org.springframework.session:spring-session-data-redis"
+
+    // 對pebble的支援
+    implementation "io.pebbletemplates:pebble-spring-boot-starter:3.1.5"
+
+    // free marker模組
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+
+    implementation 'commons-io:commons-io:2.11.0'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    
+    // spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    
+    // oauth2
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// dev
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    
+    // captcha
+    implementation files("../lib/simplecaptcha-1.2.1.jar")
+}
+
+bootRun {
+    sourceResources sourceSets.main
+    jvmArgs "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8080"
+}
