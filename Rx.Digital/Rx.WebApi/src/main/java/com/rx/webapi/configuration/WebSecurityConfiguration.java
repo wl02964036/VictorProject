@@ -40,9 +40,17 @@ public class WebSecurityConfiguration {
                             "/images/**",
                             "/upload",
                             "/angular/wav/**",
-                            "/angular/**",
-                            "/callback",
-                            "/callback-info").permitAll()  // 開放不檢核
+                            "/angular/**", // angular api
+                            "/login", // angular登入畫面
+                            "/logout", // angular登出畫面
+                            "/manage", // angular內嵌畫面
+                            "/manage/**",
+                            "/index.html",
+                            "/", // 根目錄
+                            "/*.js", "/*.css", "/*.ico", // 頂層靜態資源
+                            "/**/*.js", "/**/*.css", "/assets/**", // 子資料夾
+                            "/favicon.ico" // angular內嵌畫面
+                            ).permitAll()  // 開放不檢核
                     .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

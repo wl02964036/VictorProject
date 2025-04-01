@@ -35,6 +35,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
+	private static final List<String> IGNORE_FRONTEND = List.of("/login", // angular登入畫面
+            "/logout", // angular登出畫面
+            "/manage", // angular內嵌畫面
+            "/manage/**",
+            "/index.html",
+            "/", // 根目錄
+            "/*.js", "/*.css", "/*.ico", // 頂層靜態資源
+            "/**/*.js", "/**/*.css", "/assets/**", // 子資料夾
+            "/favicon.ico" // angular內嵌畫面
+            );
+
 	private static final List<String> WHITELIST = List.of("/angular/wav/**", "/angular/login", "/angular/reloadCaptcha",
 			"/angular/captchaImage", "/angular/captchaAudio", "/angular/captchaNumber");
 
@@ -43,6 +54,14 @@ public class JwtFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		String path = request.getRequestURI();
+
+		// 如果是frontend路徑，直接放行
+		boolean isFrontend = IGNORE_FRONTEND.stream().anyMatch(whitelistPath -> pathMatcher.match(whitelistPath, path));
+
+		if (isFrontend) {
+			chain.doFilter(request, response);
+			return;
+		}
 
 		// 如果是白名單，直接放行
 		boolean isWhitelisted = WHITELIST.stream().anyMatch(whitelistPath -> pathMatcher.match(whitelistPath, path));

@@ -1,0 +1,87 @@
+@charset "utf-8";
+/*問卷調查*/
+.home .rwd-table a.qu_btn {
+    background-color: #712120;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
+.home .rwd-table a.qu_btn:hover {
+    background-color: #e71a46;
+}
+
+.home .quest_box {
+    padding: 10px 0 0 0;
+}
+
+.home .quest_box .answer .bar {
+    height: 20px;
+}
+
+.home .quest_box .answer .bar.red {
+    background-color: #c30000;
+}
+
+.home .quest_box .answer .bar.orange {
+    background-color: #FF5722;
+}
+
+.home .quest_box .answer .bar.yellow {
+    background-color: #FFC107;
+}
+
+.home .quest_box .answer .bar.green {
+    background-color: #4CAF50;
+}
+
+.home .quest_box .answer .bar.blue {
+    background-color: #2196F3;
+}
+
+.home .quest_box .answer .bar.purple {
+    background-color: #673AB7;
+}
+
+.home .quest_box .answer ul {
+    padding: 0 0 5px 20px;
+    margin: 0;
+    list-style-type: none;
+}
+
+.home .quest_box .answer ul li {
+    padding: 2px 0;
+}
+
+.home .quest_box .answer .answer_other {
+    padding: 5px 0 0 0;
+}
+
+.home .quest_box .quest {
+    background-color: hsla(0, 0%, 0%, 0.09);
+    padding: 10px;
+    font-weight: 600;
+    font-size: 80%;
+    margin: 0 0 10px 0;
+}
+
+.home .quest_analysis p {
+    margin-bottom: 5px;
+}
+
+.home .quest_analysis {
+    padding: 10px;
+}
+
+.home .quest_analysis .qu_an_title {
+    font-size: 110%;
+    font-weight: bold;
+}
+
+.home .quest_analysis .color01 {
+    color: #3153ba;
+}
+
+.home .quest_analysis .color02 {
+    color: #b16900;
+}
