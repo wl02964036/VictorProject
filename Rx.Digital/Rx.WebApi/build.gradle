@@ -68,6 +68,9 @@ dependencies {
     implementation 'org.apache.poi:poi:4.1.2'
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
     
+    // RabbitMQ 支援
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    
     // redis
 //    implementation "org.springframework.boot:spring-boot-starter-data-redis"
 //    implementation "org.springframework.session:spring-session-data-redis"

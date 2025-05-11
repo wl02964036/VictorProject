@@ -49,7 +49,11 @@ public class WebSecurityConfiguration {
                             "/", // 根目錄
                             "/*.js", "/*.css", "/*.ico", // 頂層靜態資源
                             "/**/*.js", "/**/*.css", "/assets/**", // 子資料夾
-                            "/favicon.ico" // angular內嵌畫面
+                            "/favicon.ico", // angular內嵌畫面
+                            "/direct/**", // RabbitMQ
+                            "/routing/**", // RabbitMQ
+                            "/subscribe/**", // RabbitMQ
+                            "/worker/**" // RabbitMQ
                             ).permitAll()  // 開放不檢核
                     .anyRequest().authenticated()
                 )
